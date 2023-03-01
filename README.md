@@ -5,3 +5,4 @@ This repository will be used for the group assignments and project of the course
 Dev Prakash Srivastava
 Sofya Imanbayeva
 Lapo Mazzi
+Mattia Piras
