@@ -8,7 +8,7 @@ date: "2023-03-01"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Excercise 1
+## Exercise 1
 
 
 ```{r co2}
@@ -25,15 +25,12 @@ plot(co2_d)
 ```
 
 
-## Excercise 2
+## Exercise 2
 
-You can also embed plots, for example:
 
 ```{r UKgas}
 str(UKgas)
 ```
-
-As we can see from the plotted data, there is a change in the seasonal component from the begin of the 70's. At the same time there is also a change in the trend, which becomes steeper around the same year. In this case, a multiplicative decomposition is the more appropriate approach, since we do not have a constant seasonal component. That can be shown by analyzing the residuals of the two decompositions: we can see that in the case of the multiplicative time series the residuals are smaller, suggesting a better fit of the raw data
 
 ```{r plot UKgas}
 library(fpp2)
@@ -51,6 +48,24 @@ plot(UKgas_d2)
 checkresiduals(remainder(UKgas_d2))
 ```
 
+As we can see from the plotted data, there is a change in the seasonal component from the beginning of the 70's. At the same time there is also a change in the trend, which becomes steeper around the same year. In this case, a multiplicative decomposition is the more appropriate approach, since we do not have a constant seasonal component. What can be done alternatively is that the data is first transformed to be stable over time before the additive decomposition is used. In this case log transformation could be used. The reason for those methods is that 
+$y_t = S_t \times T_t \times R_t$ is the same as $log(y_t) = log(S_t) + log(T_t) + log(R_t)$
+
+Multiplicative decomposition being more appropriate can be shown by analyzing the residuals of the two decompositions: we can see that in the case of the multiplicative time series the residuals are smaller, suggesting a better fit for the raw data.
+
+``` {r holt-winters UKgas}
+HWGas <- HoltWinters(UKgas)
+plot(HWGas)
+HWGas
+```
+
+### Add comments here on a comparison of those results to previous ones.
+Beta is equal to 1 meaning the trend slope seems to be very dependent on the previous trend slope. Gamma is very close to 1 too meaning that more weighing is given to the most recent seasonal cycles. Alpha being very close to 0.
+
+``` {r additive decomposition of log(UKgas)}
+decUK <- decompose(log(UKgas),type = "additive")
+plot(decUK)
+```
 ## Exercise 3
 ```{r plot Nile}
 plot(Nile)
@@ -72,4 +87,10 @@ plot(HWNile2, main="Nile data: simple exponential smoothing, alpha=0.1")
 HWNile3 <- HoltWinters(Nile, alpha=.9, beta=F, gamma=F)
 plot(HWNile3, main="Nile data: simple exponential smoothing, alpha=0.9")
 ```
+### Add comments here on the effect of Alpha on the forecasts
+Smaller values of $\alpha$ show smoother forecast function while $\alpha$ closer to 1 shows a function that is not as smooth and follows the original function quite closely. The default $\alpha$ is chosen after tuning-in the parameters and minimizing the errors between the predicted values and the actual ones.
+
+## Exercise 4
+read.table("coronavirus-data.txt")
+
 
