@@ -1,0 +1,43 @@
+---
+title: "Assignment-1"
+output: pdf_document
+date: "2023-03-01"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Excercise 1
+
+
+```{r co2}
+str(co2)
+```
+
+```{r plot co2}
+plot(co2)
+```
+
+```{r decomposition co2}
+co2_d <- decompose(co2, type = "additive")
+plot(co2_d)
+```
+
+
+## Excercise 2
+
+You can also embed plots, for example:
+
+```{r UKgas}
+str(UKgas)
+```
+
+```{r plot UKgas}
+plot(UKgas)
+```
+```{r decomposition UKgas}
+UKgas_d <- decompose(UKgas, type = "multiplicative")
+plot(UKgas_d)
+```
+
