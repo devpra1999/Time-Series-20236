@@ -1,0 +1,65 @@
+---
+title: "Assignment-1"
+output: pdf_document
+date: "2023-03-01"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Excercise 1
+
+
+```{r co2}
+str(co2)
+```
+
+```{r plot co2}
+plot(co2)
+```
+
+```{r decomposition co2}
+co2_d <- decompose(co2, type = "additive")
+plot(co2_d)
+```
+
+
+## Excercise 2
+
+You can also embed plots, for example:
+
+```{r UKgas}
+str(UKgas)
+```
+
+```{r plot UKgas}
+plot(UKgas)
+```
+```{r decomposition UKgas}
+UKgas_d <- decompose(UKgas, type = "multiplicative")
+plot(UKgas_d)
+```
+
+## Exercise 3
+```{r plot Nile}
+plot(Nile)
+```
+
+```{r exponential smoothing}
+HWNile<- HoltWinters(Nile,  beta= F, gamma= F)
+plot(HWNile)
+HWNile
+```
+
+```{r Nile alpha, out.width='100%'}
+par(mfrow=c(3,1), cex=.4)
+plot(HWNile, main="Nile data: simple exponential smoothing, alpha=0.24")
+
+HWNile2 <- HoltWinters(Nile, alpha=.1, beta=F, gamma=F)
+plot(HWNile2, main="Nile data: simple exponential smoothing, alpha=0.1")
+
+HWNile3 <- HoltWinters(Nile, alpha=.9, beta=F, gamma=F)
+plot(HWNile3, main="Nile data: simple exponential smoothing, alpha=0.9")
+```
+
