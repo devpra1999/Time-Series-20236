@@ -33,13 +33,22 @@ You can also embed plots, for example:
 str(UKgas)
 ```
 
-As we can see from the plotted data, there is a change in the seasonal component from the begin of the 70's. At the same time there is also a change in the trend, which becomes steeper around the same year. In this case, a multiplicative decomposition is the more appropriate approach, since we do not have a constant seasonal component. 
+As we can see from the plotted data, there is a change in the seasonal component from the begin of the 70's. At the same time there is also a change in the trend, which becomes steeper around the same year. In this case, a multiplicative decomposition is the more appropriate approach, since we do not have a constant seasonal component. That can be shown by analyzing the residuals of the two decompositions: we can see that in the case of the multiplicative time series the residuals are smaller, suggesting a better fit of the raw data
+
 ```{r plot UKgas}
+library(fpp2)
+library(forecast)
+
 plot(UKgas)
 ```
 ```{r decomposition UKgas}
 UKgas_d <- decompose(UKgas, type = "multiplicative")
 plot(UKgas_d)
+checkresiduals(remainder(UKgas_d))
+
+UKgas_d2 <- decompose(UKgas, type = "additive")
+plot(UKgas_d2)
+checkresiduals(remainder(UKgas_d2))
 ```
 
 ## Exercise 3
