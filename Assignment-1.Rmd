@@ -33,6 +33,7 @@ You can also embed plots, for example:
 str(UKgas)
 ```
 
+As we can see from the plotted data, there is a change in the seasonal component from the begin of the 70's. At the same time there is also a change in the trend, which becomes steeper around the same year. In this case, a multiplicative decomposition is the more appropriate approach, since we do not have a constant seasonal component. 
 ```{r plot UKgas}
 plot(UKgas)
 ```
