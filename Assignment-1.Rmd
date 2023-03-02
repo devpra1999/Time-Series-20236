@@ -32,8 +32,7 @@ autoplot(co2)+
   ggtitle("Figure 1: Carbon Dioxide Atmospheric Concentration 1959-1997")+
   ylab("CO2 ppm")
 ```
-
-By looking at the decomposition of the time series (Figure 2) we can clearly see that there is a linear increasing trend, while seasonality is regular and its magnitude doesn't change over time.
+As the seasonal component seems to be constant, we can do an additive decomposition whose plot is:
 
 ```{r  decomposition co2}
 
@@ -43,34 +42,31 @@ autoplot(co2_d)+
 
 ```
 
+By looking at the decomposition of the time series (Figure 2) we can clearly see that there is a linear increasing trend, while seasonality is regular and its magnitude doesn't change over time.
+
 ## Excercise 2
 
-```{r UKgas}
-str(UKgas)
-```
+Below is the time series plot for the quarterly UK gas consumption from the first quarter of 1960 to the forth quarter of 1986, in millions of therms.  
 
 ```{r plot UKgas}
 plot(UKgas)
 ```
 
-As we can see from the plotted data, there is a change in the seasonal component from the begin of the 70's. At the same time there is also a change in the trend, which becomes steeper around the same year. In this case, a multiplicative decomposition is the more appropriate approach, since we do not have a constant seasonal component. That can be shown by analyzing the residuals of the two decompositions: we can see that in the case of the multiplicative time series the residuals are smaller, suggesting a better fit of the raw data
+As we can see from the plotted data, there is a change in the seasonal component from the begin of the 70's. At the same time there is also a change in the trend, which becomes steeper around the same year. In this case, a multiplicative decomposition is the more appropriate approach, since we do not have a constant seasonal component. 
 
 ```{r m decomposition UKgas}
 UKgas_md <- decompose(UKgas, type = "multiplicative")
 plot(UKgas_md)
 ```
+The non-constant seasonality can be shown by analyzing the residuals of the two decompositions: we can see that in the case of the multiplicative time series the residuals are smaller, suggesting a better fit of the raw data
 
 ```{r residuals md}
-checkresiduals(remainder(UKgas_md))
-```
-
-```{r a decomposition UKgas}
-UKgas_ad <- decompose(UKgas, type = "additive")
-plot(UKgas_ad)
+checkresiduals(remainder(UKgas_md), test = FALSE)
 ```
 
 ```{r residuals ad, results='asis'}
-table1<-checkresiduals(remainder(UKgas_ad))
+UKgas_ad <- decompose(UKgas, type = "additive")
+checkresiduals(remainder(UKgas_ad), test)
 ```
 
 If we take the log of the time series we can see that the heteroskdasticity of the data diminishes. By using log(UKgas) we can use an additive time series decomposition and still get a good representation of the trend and seasonal components. At the same time, the decomposition remains a good fit of the raw data, as we can see from the residuals.
@@ -85,7 +81,7 @@ autoplot(decompose(logUK))
 ```
 
 ```{r log residuals}
-checkresiduals(remainder((decompose(logUK))))
+checkresiduals(remainder((decompose(logUK))), test = FALSE)
 ```
 
 We can try to create a forecast of our time series and compare it with the original dataset.
