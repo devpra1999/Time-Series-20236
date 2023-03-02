@@ -5,7 +5,7 @@ date: "2023-03-01"
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, results = 'asis')
 list.of.packages <- c("fpp2", "forecast")
 if(!require(fpp2)){
     install.packages("fpp2")
@@ -63,8 +63,8 @@ UKgas_ad <- decompose(UKgas, type = "additive")
 plot(UKgas_ad)
 ```
 
-```{r residuals ad}
-checkresiduals(remainder(UKgas_ad))
+```{r residuals ad, results='asis'}
+table1<-checkresiduals(remainder(UKgas_ad))
 ```
 
 
@@ -85,7 +85,7 @@ checkresiduals(remainder((decompose(logUK))))
 
 We can try to create a forecast of our time series and compare it with the original dataset.
 
-```{r UKgas HW}
+```{r UKgas HW,results='asis'}
 HWgas = HoltWinters(UKgas,alpha=NULL, beta=F, gamma=TRUE)
 plot(HWgas)
 ```
