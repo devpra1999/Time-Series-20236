@@ -102,7 +102,7 @@ Here is the time series plot for the annual flow of the river Nile at Ashwan, fo
 plot(Nile)
 ```
 
-sing Holt-Winters exponential smoothing we get the following plot. The value of $\alpha$ chosen (by default) is 0.2465579
+sing Holt-Winters exponential smoothing we get the following plot. The value of $\alpha$ chosen (by default) is 0.24
 
 ```{r exponential smoothing}
 HWNile<- HoltWinters(Nile,  beta= F, gamma= F)
@@ -131,6 +131,10 @@ MAPE3=mean(abs((fitnile3-Nile)/Nile))
 ```
 
 We can see from the graphs that as $\alpha$ approaches 1, the estimated value converges to the actual data. If instead $\alpha$ approaches 0, the fitted values converge to a constant.
+
+For $\alpha$ = 0.24, MAPE is `r MAPE`
+    $\alpha$ = 0.1 , MAPE is `r MAPE2`
+    $\alpha$ = 0.9 , MAPE is `r MAPE3`
 
 By looking at the 3 MAPE we can see that the HW with $\alpha$=0.24 is the one with the highest predicting performance, with predictions that are on average 13.07% away from the actual values.
 
