@@ -1,10 +1,14 @@
 ---
-title: "Assignment-1"
+title: "Assignment-1\n \\vspace{1in}"
 output: pdf_document
-date: "2023-03-01"
+date: "2023-03-01\n \\vspace{1in}"
+author: "Imanbayeva Sofya, Mazzi Lapo, Piras Mattia, Srivastava Dev\n \\vspace{1in}"
+subtitle: "Group 22\n \\vspace{1in}"
+
 ---
 
-```{r setup, include=FALSE, echo=FALSE}
+
+```{r setup, include=FALSE, echo=TRUE}
 knitr::opts_chunk$set(echo = FALSE, results = 'asis')
 list.of.packages <- c("fpp2", "forecast")
 if(!require(fpp2)){
@@ -16,24 +20,28 @@ if(!require(forecast)){
     library(forecast)
 }
 ```
+\newpage
+## Exercise 1
 
-## Excercise 1
+Figure 1 shows the concentration of CO2 (in parts per million) in the atmosphere between 1959 and 1997.
 
-
-```{r co2}
-str(co2)
-```
+(&nbsp)
 
 ```{r plot co2}
-plot(co2)
+autoplot(co2)+
+  ggtitle("Figure 1: Carbon Dioxide Atmospheric Concentration 1959-1997")+
+  ylab("CO2 ppm")
 ```
-By looking at the decomposition we can clearly see that there is a linear increasing trend, while seasonality is regular and its magnitude doesn't change over time. 
 
-```{r decomposition co2}
+By looking at the decomposition of the time series (Figure 2) we can clearly see that there is a linear increasing trend, while seasonality is regular and its magnitude doesn't change over time.
+
+```{r  decomposition co2}
+
 co2_d <- decompose(co2, type = "additive")
-plot(co2_d)
-```
+autoplot(co2_d)+
+  ggtitle("Figure 2: CO2 Time Series Decompostion (ppm)")
 
+```
 
 ## Excercise 2
 
@@ -47,7 +55,6 @@ plot(UKgas)
 
 As we can see from the plotted data, there is a change in the seasonal component from the begin of the 70's. At the same time there is also a change in the trend, which becomes steeper around the same year. In this case, a multiplicative decomposition is the more appropriate approach, since we do not have a constant seasonal component. That can be shown by analyzing the residuals of the two decompositions: we can see that in the case of the multiplicative time series the residuals are smaller, suggesting a better fit of the raw data
 
-
 ```{r m decomposition UKgas}
 UKgas_md <- decompose(UKgas, type = "multiplicative")
 plot(UKgas_md)
@@ -57,7 +64,6 @@ plot(UKgas_md)
 checkresiduals(remainder(UKgas_md))
 ```
 
-
 ```{r a decomposition UKgas}
 UKgas_ad <- decompose(UKgas, type = "additive")
 plot(UKgas_ad)
@@ -66,7 +72,6 @@ plot(UKgas_ad)
 ```{r residuals ad, results='asis'}
 table1<-checkresiduals(remainder(UKgas_ad))
 ```
-
 
 If we take the log of the time series we can see that the heteroskdasticity of the data diminishes. By using log(UKgas) we can use an additive time series decomposition and still get a good representation of the trend and seasonal components. At the same time, the decomposition remains a good fit of the raw data, as we can see from the residuals.
 
@@ -90,7 +95,7 @@ HWgas = HoltWinters(UKgas,alpha=NULL, beta=F, gamma=TRUE)
 plot(HWgas)
 ```
 
-From the plot comparison, it seems that H&W is a good predictor of the raw data. However, we can get a more accurate value of the predictive performance by using the MAPE. As we can see, the predictive performance of the H&W estimates is poor: on average the predictions are 42.45% away from the target. 
+From the plot comparison, it seems that H&W is a good predictor of the raw data. However, we can get a more accurate value of the predictive performance by using the MAPE. As we can see, the predictive performance of the H&W estimates is poor: on average the predictions are 42.45% away from the target.
 
 ```{r Maper for UKgas and HW}
 fitgas <- fitted(HWgas)
@@ -99,6 +104,7 @@ MAPE
 ```
 
 ## Exercise 3
+
 ```{r plot Nile}
 plot(Nile)
 ```
@@ -111,7 +117,7 @@ plot(HWNile)
 HWNile
 ```
 
-We can see from the graphs that as $\alpha$ approaches 1, the estimated value converges to the actual data. If instead $\alpha$	approaches 0, the fitted values converge to a constant. 
+We can see from the graphs that as $\alpha$ approaches 1, the estimated value converges to the actual data. If instead $\alpha$ approaches 0, the fitted values converge to a constant.
 
 ```{r Nile alpha, out.width='100%'}
 par(mfrow=c(3,1), cex=.4)
@@ -165,4 +171,3 @@ plot(icu, xlab = "Days since start", ylab = "Intensive Care use")
 plot(tests, xlab = "Days since start", ylab = "Number of Tests")
 
 ```
-
