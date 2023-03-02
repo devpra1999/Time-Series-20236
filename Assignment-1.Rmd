@@ -59,40 +59,29 @@ As we can see from the plotted data (Figure 3), there is a change in the seasona
 ```{r m decomposition UKgas,fig.height=4}
 UKgas_md <- decompose(UKgas, type = "multiplicative")
 autoplot(UKgas_md)+
-  ggtitle("Figure 4: Multiplicative Decomposition")
+  ggtitle("Figure 4: Multiplicative Decomposition of Gas Consumption")
 ```
 
-The non-constant seasonality can be shown by analyzing the residuals of the two decompositions: we can see that in the case of the multiplicative time series the residuals are smaller, suggesting a better fit of the raw data
 
-```{r residuals md, fig.height = 4}
-checkresiduals(remainder(UKgas_md), test = FALSE)
-```
+If we take the log of the time series we can see that the heteroskdasticity of the data diminishes. By using log(UKgas) we can use an additive time series decomposition and still get a good representation of the trend and seasonal components.
 
-```{r residuals ad, results='asis',fig.height=4}
-UKgas_ad <- decompose(UKgas, type = "additive")
-checkresiduals(remainder(UKgas_ad), test = FALSE)
-```
-
-If we take the log of the time series we can see that the heteroskdasticity of the data diminishes. By using log(UKgas) we can use an additive time series decomposition and still get a good representation of the trend and seasonal components. At the same time, the decomposition remains a good fit of the raw data, as we can see from the residuals.
-
-```{r log plot}
+```{r log plot,fig.height=3}
 logUK = log(UKgas)
-plot(logUK)
+autoplot(logUK)+
+  ggtitle("Figure 5: Log Quarterly UK Gas Consumption")
 ```
 
 ```{r log decomposition}
-autoplot(decompose(logUK))
-```
-
-```{r log residuals}
-checkresiduals(remainder((decompose(logUK))), test = FALSE)
+autoplot(decompose(logUK))+
+  ggtitle("Figure 6: Additive Decomposition of Log Gas Consumption")
 ```
 
 We can try to create a forecast of our time series and compare it with the original dataset.
 
 ```{r UKgas HW,results='asis'}
 HWgas = HoltWinters(UKgas,alpha=NULL, beta=F, gamma=TRUE)
-plot(HWgas)
+autoplot(HWgas)+
+  ggtitle("Figure 6: H&W Gas Consumption")
 ```
 
 From the plot comparison, it seems that H&W is a good predictor of the raw data. However, we can get a more accurate value of the predictive performance by using the MAPE. As we can see, the predictive performance of the H&W estimates is poor: on average the predictions are 42.45% away from the target.
@@ -114,7 +103,6 @@ The value of alpha chose is 0.2465579
 ```{r exponential smoothing}
 HWNile<- HoltWinters(Nile,  beta= F, gamma= F)
 plot(HWNile)
-HWNile
 ```
 
 We can see from the graphs that as $\alpha$ approaches 1, the estimated value converges to the actual data. If instead $\alpha$ approaches 0, the fitted values converge to a constant.
@@ -161,6 +149,8 @@ cases <- ts(df$Contagion)
 icu <- ts(df$IntensiveCare)
 tests <- ts(df$TestsTamponi)
 ```
+
+Here are some of the time series plots derived from the coronavirus dataset for Italy.
 
 ```{r covid plots}
 par(mfrow = c(2,2))
