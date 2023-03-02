@@ -18,6 +18,7 @@ str(co2)
 ```{r plot co2}
 plot(co2)
 ```
+By looking at the decomposition we can clearly see that there is a linear increasing trend, while seasonality is regularl and its magnitude doesn't change over time. 
 
 ```{r decomposition co2}
 co2_d <- decompose(co2, type = "additive")
@@ -47,6 +48,7 @@ UKgas_d2 <- decompose(UKgas, type = "additive")
 plot(UKgas_d2)
 checkresiduals(remainder(UKgas_d2))
 ```
+If we take the log of the time series we can see that the heteroskdasticity of the data diminishes. By using log(UKgas) we can use an additive time series decomposition and still get a good representation of the trend and seasonal components. At the same time, the decompositon remaina good fit of the raw data, as we can see from the residuals.
 
 As we can see from the plotted data, there is a change in the seasonal component from the beginning of the 70's. At the same time there is also a change in the trend, which becomes steeper around the same year. In this case, a multiplicative decomposition is the more appropriate approach, since we do not have a constant seasonal component. What can be done alternatively is that the data is first transformed to be stable over time before the additive decomposition is used. In this case log transformation could be used. The reason for those methods is that 
 $y_t = S_t \times T_t \times R_t$ is the same as $log(y_t) = log(S_t) + log(T_t) + log(R_t)$
@@ -65,7 +67,15 @@ Beta is equal to 1 meaning the trend slope seems to be very dependent on the pre
 ``` {r additive decomposition of log(UKgas)}
 decUK <- decompose(log(UKgas),type = "additive")
 plot(decUK)
+
+
 ```
+logUK = log(UKgas)
+plot(logUK)
+autoplot(decompose(logUK))
+checkresiduals(remainder((decompose(logUK))))
+```
+
 ## Exercise 3
 ```{r plot Nile}
 plot(Nile)
