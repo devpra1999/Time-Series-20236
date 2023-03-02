@@ -30,7 +30,7 @@ Figure 1 shows the concentration of CO2 (in parts per million) in the atmosphere
 ```{r plot co2, fig.height=3}
 autoplot(co2)+
   ggtitle("Figure 1: Carbon Dioxide Atmospheric Concentration 1959-1997")+
-  ylab("CO2 ppm")
+  ylab("CO2 (in ppm)")
 ```
 As the seasonal component seems to be constant, we can do an additive decomposition whose plot is:
 
@@ -58,15 +58,17 @@ As we can see from the plotted data (Figure 3), there is a change in the seasona
 
 ```{r m decomposition UKgas,fig.height=4}
 UKgas_md <- decompose(UKgas, type = "multiplicative")
-plot(UKgas_md)
+autoplot(UKgas_md)+
+  ggtitle("Figure 4: Multiplicative Decomposition")
 ```
+
 The non-constant seasonality can be shown by analyzing the residuals of the two decompositions: we can see that in the case of the multiplicative time series the residuals are smaller, suggesting a better fit of the raw data
 
-```{r residuals md}
+```{r residuals md, fig.height = 4}
 checkresiduals(remainder(UKgas_md), test = FALSE)
 ```
 
-```{r residuals ad, results='asis'}
+```{r residuals ad, results='asis',fig.height=4}
 UKgas_ad <- decompose(UKgas, type = "additive")
 checkresiduals(remainder(UKgas_ad), test = FALSE)
 ```
