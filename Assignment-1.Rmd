@@ -80,8 +80,9 @@ We can try to create a forecast of our time series and compare it with the origi
 
 ```{r UKgas HW,results='asis'}
 HWgas = HoltWinters(UKgas,alpha=NULL, beta=F, gamma=TRUE)
-autoplot(HWgas)+
-  ggtitle("Figure 6: H&W Gas Consumption")
+plot(HWgas)+
+  title("Figure7:")
+  
 ```
 
 From the plot comparison, it seems that H&W is a good predictor of the raw data. However, we can get a more accurate value of the predictive performance by using the MAPE.
