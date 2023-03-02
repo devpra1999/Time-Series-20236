@@ -103,23 +103,39 @@ MAPE
 plot(Nile)
 ```
 
+The value of alpha chose is 0.2465579
+
 ```{r exponential smoothing}
 HWNile<- HoltWinters(Nile,  beta= F, gamma= F)
 plot(HWNile)
 HWNile
 ```
 
+We can see from the graphs that as $\alpha$ approaches 1, the estimated value converges to the actual data. If instead $\alpha$	approaches 0, the fitted values converge to a constant. 
+
 ```{r Nile alpha, out.width='100%'}
 par(mfrow=c(3,1), cex=.4)
 plot(HWNile, main="Nile data: simple exponential smoothing, alpha=0.24")
+fitnile <- fitted(HWNile)
+MAPE=mean(abs((fitnile-Nile)/Nile))
 
 HWNile2 <- HoltWinters(Nile, alpha=.1, beta=F, gamma=F)
 plot(HWNile2, main="Nile data: simple exponential smoothing, alpha=0.1")
+fitnile2 <- fitted(HWNile2)
+MAPE2=mean(abs((fitnile2-Nile)/Nile))
 
 HWNile3 <- HoltWinters(Nile, alpha=.9, beta=F, gamma=F)
 plot(HWNile3, main="Nile data: simple exponential smoothing, alpha=0.9")
+fitnile3 <- fitted(HWNile3)
+MAPE3=mean(abs((fitnile3-Nile)/Nile))
+
+
+MAPE
+MAPE2
+MAPE3
 ```
 
+By looking at the 3 MAPE we can see that the HW with $\alpha$=0.24 is the one with the highest predicting performance, with predictions that are on average 13.07% away from the actual values.
 
 ## Exercise 4
 
