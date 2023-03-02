@@ -76,7 +76,7 @@ autoplot(decompose(logUK))+
   ggtitle("Figure 6: Additive Decomposition of Log Gas Consumption")
 ```
 
-We can try to create a forecast of our time series and compare it with the original dataset.
+We can try to create a forecast of our time series and compare it with the original dataset. Using Holt-Winters exponential smoothening we get
 
 ```{r UKgas HW,results='asis'}
 HWgas = HoltWinters(UKgas,alpha=NULL, beta=F, gamma=TRUE)
@@ -84,28 +84,33 @@ autoplot(HWgas)+
   ggtitle("Figure 6: H&W Gas Consumption")
 ```
 
-From the plot comparison, it seems that H&W is a good predictor of the raw data. However, we can get a more accurate value of the predictive performance by using the MAPE. As we can see, the predictive performance of the H&W estimates is poor: on average the predictions are 42.45% away from the target.
+From the plot comparison, it seems that H&W is a good predictor of the raw data. However, we can get a more accurate value of the predictive performance by using the MAPE.
 
 ```{r Maper for UKgas and HW}
 fitgas <- fitted(HWgas)
 MAPE=mean(abs((fitgas-UKgas)/UKgas))
-MAPE
 ```
 
+Using MAPE, we find that the predictive performance of the H&W estimates is poor: on average the predictions are 42.45% away from the target.
+
+
 ## Exercise 3
+
+Here is the time series plot for the annual flow of the river Nile at Ashwan, for the period 1871-1970
 
 ```{r plot Nile}
 plot(Nile)
 ```
 
-The value of alpha chose is 0.2465579
+sing Holt-Winters exponential smoothing we get the following plot. The value of $\alpha$ chosen (by default) is 0.2465579
 
 ```{r exponential smoothing}
 HWNile<- HoltWinters(Nile,  beta= F, gamma= F)
 plot(HWNile)
 ```
 
-We can see from the graphs that as $\alpha$ approaches 1, the estimated value converges to the actual data. If instead $\alpha$ approaches 0, the fitted values converge to a constant.
+Now doing a comparison with $\alpha$ = 0 and $\alpha$ = 1 we get the following plots.
+
 
 ```{r Nile alpha, out.width='100%'}
 par(mfrow=c(3,1), cex=.4)
@@ -123,11 +128,9 @@ plot(HWNile3, main="Nile data: simple exponential smoothing, alpha=0.9")
 fitnile3 <- fitted(HWNile3)
 MAPE3=mean(abs((fitnile3-Nile)/Nile))
 
-
-MAPE
-MAPE2
-MAPE3
 ```
+
+We can see from the graphs that as $\alpha$ approaches 1, the estimated value converges to the actual data. If instead $\alpha$ approaches 0, the fitted values converge to a constant.
 
 By looking at the 3 MAPE we can see that the HW with $\alpha$=0.24 is the one with the highest predicting performance, with predictions that are on average 13.07% away from the actual values.
 
