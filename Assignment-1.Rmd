@@ -97,13 +97,13 @@ Using MAPE, we find that the predictive performance of the H&W estimates is poor
 
 Here is the time series plot for the annual flow of the river Nile at Ashwan, for the period 1871-1970
 
-```{r plot Nile}
-plot(Nile)
+```{r plot Nile, fig.height=3}
+plot(Nile, ylab = "Annual Flow (10^8 m3)")
 ```
 
 Using Holt-Winters exponential smoothing we get the following plot. The value of $\alpha$ chosen (by default) is 0.24
 
-```{r exponential smoothing}
+```{r exponential smoothing, fig.height=3}
 HWNile<- HoltWinters(Nile,  beta= F, gamma= F)
 plot(HWNile)
 ```
