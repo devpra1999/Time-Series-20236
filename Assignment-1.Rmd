@@ -150,4 +150,19 @@ df <- read.table(
 str(df)
 ```
 
+```{r Time Series vars}
+deaths <- ts(df$Deaths)
+cases <- ts(df$Contagion)
+icu <- ts(df$IntensiveCare)
+tests <- ts(df$TestsTamponi)
+```
+
+```{r covid plots}
+par(mfrow = c(2,2))
+plot(deaths, xlab = "Days since start", ylab = "Number of Deaths")
+plot(cases, xlab = "Days since start", ylab = "Number of Cases")
+plot(icu, xlab = "Days since start", ylab = "Intensive Care use")
+plot(tests, xlab = "Days since start", ylab = "Number of Tests")
+
+```
 
