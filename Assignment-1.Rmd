@@ -37,8 +37,6 @@ plot(co2_d)
 
 ## Excercise 2
 
-You can also embed plots, for example:
-
 ```{r UKgas}
 str(UKgas)
 ```
@@ -85,6 +83,18 @@ autoplot(decompose(logUK))
 checkresiduals(remainder((decompose(logUK))))
 ```
 
+We can try to create a forecast of our time series and compare it with the original dataset.
+
+```{H&W forecast of UKgas}
+HWgas = HoltWinters(UKgas,alpha=NULL, beta=F, gamma=TRUE)
+plot(HWgas)
+```
+From the plot comparison, it seems that H&W is a good predictor of the raw data. However, we can get a more accurate value of the predictive perfomance by using the MAPE. As we can see, the predictive performance of the H%W estimates is poor: on avrage the predictions are 42.45% away from the target. 
+
+```{MAPE of UKgas and HW}
+fitgas <- fitted(HWgas)
+mean(abs((fitgas-fit1)/UKgas))
+```
 
 ## Exercise 3
 ```{r plot Nile}
