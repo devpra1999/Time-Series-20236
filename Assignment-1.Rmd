@@ -81,7 +81,7 @@ We can try to create a forecast of our time series and compare it with the origi
 ```{r UKgas HW,results='asis'}
 HWgas = HoltWinters(UKgas,alpha=NULL, beta=F, gamma=TRUE)
 plot(HWgas)+
-  title("Figure7:")
+  
   
 ```
 
