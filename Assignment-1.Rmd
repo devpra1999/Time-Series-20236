@@ -27,14 +27,14 @@ Figure 1 shows the concentration of CO2 (in parts per million) in the atmosphere
 
 (&nbsp)
 
-```{r plot co2}
+```{r plot co2, fig.height=3}
 autoplot(co2)+
   ggtitle("Figure 1: Carbon Dioxide Atmospheric Concentration 1959-1997")+
   ylab("CO2 ppm")
 ```
 As the seasonal component seems to be constant, we can do an additive decomposition whose plot is:
 
-```{r  decomposition co2}
+```{r  decomposition co2, fig.height=4}
 
 co2_d <- decompose(co2, type = "additive")
 autoplot(co2_d)+
@@ -48,13 +48,15 @@ By looking at the decomposition of the time series (Figure 2) we can clearly see
 
 Below is the time series plot for the quarterly UK gas consumption from the first quarter of 1960 to the forth quarter of 1986, in millions of therms.  
 
-```{r plot UKgas}
-plot(UKgas)
+```{r plot UKgas,fig.height=3}
+autoplot(UKgas)+
+  ggtitle("Figure 3: Quarterly UK Gas Consumption (in mn therms)")+
+  ylab("Gas (mn therms")
 ```
 
-As we can see from the plotted data, there is a change in the seasonal component from the begin of the 70's. At the same time there is also a change in the trend, which becomes steeper around the same year. In this case, a multiplicative decomposition is the more appropriate approach, since we do not have a constant seasonal component. 
+As we can see from the plotted data (Figure 3), there is a change in the seasonal component from the begin of the 70's. At the same time there is also a change in the trend, which becomes steeper around the same year. In this case, a multiplicative decomposition is the more appropriate approach, since we do not have a constant seasonal component. 
 
-```{r m decomposition UKgas}
+```{r m decomposition UKgas,fig.height=4}
 UKgas_md <- decompose(UKgas, type = "multiplicative")
 plot(UKgas_md)
 ```
@@ -149,7 +151,6 @@ df <- read.table(
   na.strings = "",
   col.names = c("Day", "Contagion", "Deaths", "IntensiveCare", "TestsTamponi"),
   skip = 1)
-str(df)
 ```
 
 ```{r Time Series vars}
