@@ -66,7 +66,7 @@ checkresiduals(remainder(UKgas_md), test = FALSE)
 
 ```{r residuals ad, results='asis'}
 UKgas_ad <- decompose(UKgas, type = "additive")
-checkresiduals(remainder(UKgas_ad), test)
+checkresiduals(remainder(UKgas_ad), test = FALSE)
 ```
 
 If we take the log of the time series we can see that the heteroskdasticity of the data diminishes. By using log(UKgas) we can use an additive time series decomposition and still get a good representation of the trend and seasonal components. At the same time, the decomposition remains a good fit of the raw data, as we can see from the residuals.
