@@ -61,7 +61,7 @@ UKgas_md <- decompose(UKgas, type = "multiplicative")
 autoplot(UKgas_md)+
   ggtitle("Figure 4: Multiplicative Decomposition of Gas Consumption")
 ```
-
+Classical time decomposition models assume constant seasonal effect and tend to over-smooth sharp increases and falls in the data. It seems that in the 1970s there was a change in UK gas consumption patterns. Due to that change in the seasonal component, the multiplicative decomposition over-smoothed the sharp increase in data which is reflected in the residuals. Additive decomposition showed even worse results. One of the possible solutions to improve the results might be to use alternative methods that allow for slight change in the seasonal component, for example X11 decomposition.
 
 If we take the log of the time series we can see that the heteroskdasticity of the data diminishes. By using log(UKgas) we can use an additive time series decomposition and still get a good representation of the trend and seasonal components.
 
