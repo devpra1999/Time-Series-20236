@@ -27,7 +27,7 @@ str(co2)
 ```{r plot co2}
 plot(co2)
 ```
-By looking at the decomposition we can clearly see that there is a linear increasing trend, while seasonality is regularl and its magnitude doesn't change over time. 
+By looking at the decomposition we can clearly see that there is a linear increasing trend, while seasonality is regular and its magnitude doesn't change over time. 
 
 ```{r decomposition co2}
 co2_d <- decompose(co2, type = "additive")
@@ -85,15 +85,17 @@ checkresiduals(remainder((decompose(logUK))))
 
 We can try to create a forecast of our time series and compare it with the original dataset.
 
-```{H&W forecast of UKgas}
+```{r UKgas HW}
 HWgas = HoltWinters(UKgas,alpha=NULL, beta=F, gamma=TRUE)
 plot(HWgas)
 ```
-From the plot comparison, it seems that H&W is a good predictor of the raw data. However, we can get a more accurate value of the predictive perfomance by using the MAPE. As we can see, the predictive performance of the H%W estimates is poor: on avrage the predictions are 42.45% away from the target. 
 
-```{MAPE of UKgas and HW}
+From the plot comparison, it seems that H&W is a good predictor of the raw data. However, we can get a more accurate value of the predictive performance by using the MAPE. As we can see, the predictive performance of the H&W estimates is poor: on average the predictions are 42.45% away from the target. 
+
+```{r Maper for UKgas and HW}
 fitgas <- fitted(HWgas)
-mean(abs((fitgas-fit1)/UKgas))
+MAPE=mean(abs((fitgas-UKgas)/UKgas))
+MAPE
 ```
 
 ## Exercise 3
