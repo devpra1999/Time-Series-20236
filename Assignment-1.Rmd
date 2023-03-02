@@ -139,4 +139,15 @@ By looking at the 3 MAPE we can see that the HW with $\alpha$=0.24 is the one wi
 
 ## Exercise 4
 
+```{r Reading Data}
+df <- read.table(
+  file = "coronavirus-data.txt",
+  header = FALSE,
+  sep = "\t",
+  na.strings = "",
+  col.names = c("Day", "Contagion", "Deaths", "IntensiveCare", "TestsTamponi"),
+  skip = 1)
+str(df)
+```
+
 
