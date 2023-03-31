@@ -25,7 +25,6 @@ if(!require(forecast)){
 
 Figure 1 shows the concentration of CO2 (in parts per million) in the atmosphere between 1959 and 1997.
 
-(&nbsp)
 
 ```{r plot co2, fig.height=3}
 autoplot(co2)+
@@ -44,7 +43,7 @@ autoplot(co2_d)+
 
 By looking at the decomposition of the time series (Figure 2) we can clearly see that there is a linear increasing trend, while seasonality is regular and its magnitude doesn't change over time.
 
-## Excercise 2
+## Exercise 2
 
 Below is the time series plot for the quarterly UK gas consumption from the first quarter of 1960 to the forth quarter of 1986, in millions of therms.  
 
@@ -71,14 +70,14 @@ autoplot(logUK)+
   ggtitle("Figure 5: Log Quarterly UK Gas Consumption")
 ```
 
-```{r log decomposition}
+```{r log decomposition, fig.height=4}
 autoplot(decompose(logUK))+
   ggtitle("Figure 6: Additive Decomposition of Log Gas Consumption")
 ```
 
 We can try to create a forecast of our time series and compare it with the original dataset. Using Holt-Winters exponential smoothening we get
 
-```{r UKgas HW,results='asis'}
+```{r UKgas HW,results='asis', fig.height=3}
 HWgas = HoltWinters(UKgas,alpha=NULL, beta=F, gamma=TRUE)
 plot(HWgas)
 ```
@@ -97,21 +96,27 @@ Using MAPE, we find that the predictive performance of the H&W estimates is poor
 
 Figure 7 shows the time series plot for the annual flow of the river Nile at Ashwan, for the period 1871-1970
 
+<<<<<<< HEAD
 ```{r plot Nile}
 autoplot(Nile)+
   ggtitle("Figure 7: Annual flow of Nile River")+
   ylab("Water flow in 10^8 m^3")
+=======
+```{r plot Nile, fig.height=3}
+autoplot(Nile)+
+  ggtitle("Figure 7: Annual flow of Nile River")+
+  ylab("Annual Flow (10^8 m3)")
+>>>>>>> 65673c2badd5e6d57000ec660d4e03cc29d26135
 ```
 
 Using Holt-Winters exponential smoothing we get the following plot. The value of $\alpha$ chosen (by default) is 0.24
 
-```{r exponential smoothing}
+```{r exponential smoothing, fig.height=3}
 HWNile<- HoltWinters(Nile,  beta= F, gamma= F)
 plot(HWNile)
 ```
 
 Now doing a comparison with $\alpha$ = 0 and $\alpha$ = 1 we get the following plots.
-
 
 ```{r Nile alpha, out.width='100%'}
 par(mfrow=c(3,1), cex=.4)
