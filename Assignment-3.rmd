@@ -5,11 +5,16 @@ date: "2023-03-31\n \\vspace{1in}"
 author: "Imanbayeva Sofya, Mazzi Lapo, Piras Mattia, Srivastava Dev\n \\vspace{1in}"
 subtitle: "Group 22\n \\vspace{1in}"
 ---
-#loading dataset
 
+
+#loading dataset
 ```{r}
 HMMdataset=read.csv("https://raw.githubusercontent.com/devpra1999/Time-Series-20236/main/data_assHMM.csv",header = TRUE)
 attach(HMMdataset)
-
-
 ```
+```{r Plotting Italian nominal bond yields}
+plot(ITAbond_nom)
+```
+
+
+
