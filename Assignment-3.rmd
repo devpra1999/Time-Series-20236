@@ -6,14 +6,57 @@ author: "Imanbayeva Sofya, Mazzi Lapo, Piras Mattia, Srivastava Dev\n \\vspace{1
 subtitle: "Group 22\n \\vspace{1in}"
 ---
 
+```{r setup, include=FALSE, echo=TRUE}
+knitr::opts_chunk$set(echo = FALSE, results = 'asis')
+list.of.packages <- c("fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang")
+if(!require(fpp2)){
+    install.packages("fpp2")
+    library(fpp2)
+}
+if(!require(forecast)){
+    install.packages("forecast")
+    library(forecast)
+}
+if(!require(ggplot2)){
+    install.packages("ggplot2")
+    library(ggplot2)
+}
 
-#loading dataset
-```{r}
-HMMdataset=read.csv("https://raw.githubusercontent.com/devpra1999/Time-Series-20236/main/data_assHMM.csv",header = TRUE)
-attach(HMMdataset)
+if(!require(depmixS4)){
+    install.packages("depmixS4")
+    library(depmixS4)
+}
+
+if(!require(tidyverse)){
+    install.packages("tidyverse")
+    library(tidyverse)
+}
+
+if(!require(dplyr)){
+    install.packages("dplyr")
+    library(dplyr)
+}
+
+if(!require(rlang)){
+    install.packages("rlang")
+    library(rlang)
+}
 ```
+\newpage
+
+
+```{r loading dataset}
+HMMdataset=read.csv("https://raw.githubusercontent.com/devpra1999/Time-Series-20236/main/data_assHMM.csv",header = TRUE)
+HMMdataset$Time <- gsub("_", "-", HMMdataset$Time)
+HMMdataset$Time <- as.Date(HMMdataset$Time, format = "%Y-%m-%d")
+attach(HMMdataset)
+class(Time)
+```
+
+
 ```{r Plotting Italian nominal bond yields}
-plot(ITAbond_nom)
+ggplot(data=HMMdataset, mapping = aes(x = Time, y = ITAbond_nom, group=1))+geom_line()+labs(title = "10 year Italian Bond Yield (1997-2019)", x = "Year of observation", y = "Nominal Bond Yield (%)")+ scale_x_date(date_labels = "%Y")
+
 ```
 
 
