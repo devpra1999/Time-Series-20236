@@ -50,14 +50,13 @@ HMMdataset=read.csv("https://raw.githubusercontent.com/devpra1999/Time-Series-20
 HMMdataset$Time <- gsub("_", "-", HMMdataset$Time)
 HMMdataset$Time <- as.Date(HMMdataset$Time, format = "%Y-%m-%d")
 attach(HMMdataset)
-class(Time)
 ```
 
 
 ```{r Plotting Italian nominal bond yields}
-ggplot(data=HMMdataset, mapping = aes(x = Time, y = ITAbond_nom, group=1))+geom_line()+labs(title = "10 year Italian Bond Yield (1997-2019)", x = "Year of observation", y = "Nominal Bond Yield (%)")+ scale_x_date(date_labels = "%Y")
+ggplot(data=HMMdataset, mapping = aes(x = Time, y = ITAbond_nom, group=1))+geom_line()+labs(title = "Graph 1: 10 year Italian Bond Yield (1997-2019)", x = "Year of observation", y = "Nominal Bond Yield (%)")+ scale_x_date(date_labels = "%Y")
 
 ```
-
+As we can see from Graph 1, the 
 
 
