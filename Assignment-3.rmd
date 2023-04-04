@@ -8,7 +8,7 @@ subtitle: "Group 22\n \\vspace{1in}"
 
 ```{r setup, include=FALSE, echo=TRUE}
 knitr::opts_chunk$set(echo = FALSE, results = 'asis')
-list.of.packages <- c("fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang")
+list.of.packages <- c("fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang","tseries")
 if(!require(fpp2)){
     install.packages("fpp2")
     library(fpp2)
@@ -41,6 +41,10 @@ if(!require(rlang)){
     install.packages("rlang")
     library(rlang)
 }
+  if(!require(tseries)){
+    install.packages("tseries")
+    library(tseries)
+}
 ```
 \newpage
 
@@ -56,7 +60,19 @@ attach(HMMdataset)
 ```{r Plotting Italian nominal bond yields}
 ggplot(data=HMMdataset, mapping = aes(x = Time, y = ITAbond_nom, group=1))+geom_line()+labs(title = "Graph 1: 10 year Italian Bond Yield (1997-2019)", x = "Year of observation", y = "Nominal Bond Yield (%)")+ scale_x_date(date_labels = "%Y")
 
+ITAts=ts(HMMdataset$ITAbond_nom, start = c(format(HMMdataset$Time[1], "%Y"), format(HMMdataset$Time[1], "%m")), frequency = 12)
+invisible(adf.test(ITAts))
 ```
-As we can see from Graph 1, the 
+In order to apply an Hidden Markov Model, there is a series of assumptions that has to be met. First, the time series under analysis has to be stationary. By looking at Graph 1, it is not clear if there is a seasonal or trend component, therefore it is necessary to perform an Augmented Dickey-Fuller (ADF) test to assess stationarity. By looking at Table 1, we can  see that the null hypothesis is rejected and thus the time series is stationary.
+
+
+| Table 1: ADF Test Results |            |
+|:----------------|------------:|
+| Test Statistic  | -2.4709     |
+| p-value         | 0.3776      |
+| Lag Order       | 6           |
+
+Another condition that has to be met is  that there must be an underlying process behind the outcomes that can be represented with a discrete number of states.By looking at Graph 1, there seems to be two or three different states corresponding to the breakpoints in the time series. These might perhaps correspond to the business cycles or to states of trust in the Italian government. In turn, these hidden states must reflect a Markov Chain: namely the current state depends solely on the previous one. This assumption is difficult to prove, as there are many other factors that can influence the business cycle apart from the previous state. 
+Finally, the last assumption is that the visible outcomes must depend solely from current the hidden state and be independent of all the others. 
 
 
