@@ -1,9 +1,15 @@
 ---
 title: "Assignment-3\n \\vspace{1in}"
-output: pdf_document
+author: |-
+  Imanbayeva Sofya, Mazzi Lapo, Piras Mattia, Srivastava Dev
+   \vspace{1in}
 date: "2023-03-31\n \\vspace{1in}"
-author: "Imanbayeva Sofya, Mazzi Lapo, Piras Mattia, Srivastava Dev\n \\vspace{1in}"
-subtitle: "Group 22\n \\vspace{1in}"
+output:
+  pdf_document: default
+  word_document: default
+subtitle: |-
+  Group 22
+   \vspace{1in}
 ---
 
 ```{r setup, include=FALSE, echo=TRUE,message = FALSE , warning = FALSE}
@@ -101,11 +107,11 @@ In the following section we can observe the results of the estimation of both th
 summary(fmodel)
 ```
 
-First thing looking at the mean for the parameters of the emissions distribution we can identify the three setup that we wanted to study: respectively state 3 is the one relative to an high risk environment, state two is relative to low risk and state one is the one that we can associate to a stable path.
+First thing looking at the mean for the parameters of the emissions distribution we can identify the three setup that we wanted to study: respectively state 2 is the one relative to an high risk environment, state two is relative to low risk and state one is the one that we can associate to a stable path.
 
-Looking instead to the transition matrix we can sey that there are steps that are never possible, such as the one from state 2 to 1, then a state that once reached is recurrent which is state 2 ( actually if we think on when state 2 appears we can raise the suspect that the recurrency is given by the fact that it is reached only at the end of the period) and a state ( state 1) which is transient.
+Looking instead to the transition matrix we can say that there are steps that are never possible, such as the one from state 2 to 1, then a state that once reached is recurrent which is state 1 ( actually if we think on when state 1 appears we can raise the suspect that the recurrency is given by the fact that it is reached only at the end of the period) and a state ( state 3) which is transient.
 
-The peculiar dynamic relative to state 1 could be explained logically by remembering that this state represents the stable path and so it is reasonable to expect:
+The peculiar dynamic relative to state 3 could be explained logically by remembering that this state represents the stable path and so it is reasonable to expect:
 
 1- that the main part of the observation falls in this set
 
