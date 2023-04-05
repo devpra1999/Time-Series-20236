@@ -47,8 +47,8 @@ if(!require(rlang)){
   }
 library(xtable)
 ```
-\newpage
 
+\newpage
 
 ```{r loading dataset}
 HMMdataset=read.csv("https://raw.githubusercontent.com/devpra1999/Time-Series-20236/main/data_assHMM.csv",header = TRUE)
@@ -57,26 +57,26 @@ HMMdataset$Time <- as.Date(HMMdataset$Time, format = "%Y-%m-%d")
 attach(HMMdataset)
 ```
 
-
 ```{r Plotting Italian nominal bond yields}
 ggplot(data=HMMdataset, mapping = aes(x = Time, y = ITAbond_nom, group=1))+geom_line()+labs(title = "Graph 1: 10 year Italian Bond Yield (1997-2019)", x = "Year of observation", y = "Nominal Bond Yield (%)")+ scale_x_date(date_labels = "%Y")
 
 ITAts=ts(HMMdataset$ITAbond_nom, start = c(format(HMMdataset$Time[1], "%Y"), format(HMMdataset$Time[1], "%m")), frequency = 12)
 invisible(adf.test(ITAts))
 ```
-In order to apply an Hidden Markov Model, there is a series of assumptions that has to be met. First, the time series under analysis has to be stationary. By looking at Graph 1, it is not clear if there is a seasonal or trend component, therefore it is necessary to perform an Augmented Dickey-Fuller (ADF) test to assess stationarity. By looking at Table 1, we can  see that the null hypothesis is rejected and thus the time series is stationary.
 
+In order to apply an Hidden Markov Model, there is a series of assumptions that has to be met. First, the time series under analysis has to be stationary. By looking at Graph 1, it is not clear if there is a seasonal or trend component, therefore it is necessary to perform an Augmented Dickey-Fuller (ADF) test to assess stationarity. By looking at Table 1, we can see that the null hypothesis is rejected and thus the time series is stationary.
 
-| Table 1: ADF Test Results |            |
-|:----------------|------------:|
-| Test Statistic  | -2.4709     |
-| p-value         | 0.3776      |
-| Lag Order       | 6           |
+| Table 1: ADF Test Results |         |
+|:--------------------------|--------:|
+| Test Statistic            | -2.4709 |
+| p-value                   |  0.3776 |
+| Lag Order                 |       6 |
 
-Another condition that has to be met is  that there must be an underlying process behind the outcomes that can be represented with a discrete number of states.By looking at Graph 1, there seems to be two or three different states corresponding to the breakpoints in the time series. These might perhaps correspond to the business cycles or to states of trust in the Italian government. In turn, these hidden states must reflect a Markov Chain: namely the current state depends solely on the previous one. This assumption is difficult to prove, as there are many other factors that can influence the business cycle apart from the previous state. 
-Finally, the last assumption is that the visible outcomes must depend solely from current the hidden state and be independent of all the others. 
-\newpage
+Another condition that has to be met is that there must be an underlying process behind the outcomes that can be represented with a discrete number of states.By looking at Graph 1, there seems to be two or three different states corresponding to the breakpoints in the time series. These might perhaps correspond to the business cycles or to states of trust in the Italian government. In turn, these hidden states must reflect a Markov Chain: namely the current state depends solely on the previous one. This assumption is difficult to prove, as there are many other factors that can influence the business cycle apart from the previous state. Finally, the last assumption is that the visible outcomes must depend solely from current the hidden state and be independent of all the others. \newpage
 
+**MODEL ESTIMATION**
+
+In this first part we just set up our model, the initial probabilities and the transition matrix are just made by default values.
 
 ```{r model}
 model = depmix(ITAts ~ 1, data=data.frame(ITAts), nstates=3)
@@ -87,7 +87,7 @@ model = depmix(ITAts ~ 1, data=data.frame(ITAts), nstates=3)
   cat('\n') 
   model
 
-```
+
 ```
 
 ```{r MLE}
@@ -95,11 +95,25 @@ fmodel <- fit(model)
 
 ```
 
+In the following section we can observe the results of the estimation of both the initial probabilities and the transition matrix.
+
 ```{r,echo=TRUE}
 summary(fmodel)
 ```
 
+First thing looking at the mean for the parameters of the emissions distribution we can identify the three setup that we wanted to study: respectively state 3 is the one relative to an high risk environment, state two is relative to low risk and state one is the one that we can associate to a stable path.
 
+Looking instead to the transition matrix we can sey that there are steps that are never possible, such as the one from state 2 to 1, then a state that once reached is recurrent which is state 2 ( actually if we think on when state 2 appears we can raise the suspect that the recurrency is given by the fact that it is reached only at the end of the period) and a state ( state 1) which is transient.
+
+The peculiar dynamic relative to state 1 could be explained logically by remembering that this state represents the stable path and so it is reasonable to expect:
+
+1- that the main part of the observation falls in this set
+
+2- that after the period of shocks ( change in risks) the level will come back to the stable path values.
+
+**DECODING**
+
+this last section is instead dedicated to decoding
 
 ```{r}
 estStates <- posterior(fmodel)
@@ -108,6 +122,7 @@ estStates <- posterior(fmodel)
 ```{r, out.width='40%'}
 plot(time(ITAts), estStates[,1],ylab= "PREDICTED STATE",xlab="TIME",  cex=.3, type="s")
 ```
+
 ```{r}
 ```
 
@@ -117,7 +132,6 @@ results_df <- data.frame(time_index = time(ITAts),
   estimated_state=estStates[,1])%>%
   gather("variable", "value", -time_index)
 ```
-
 
 ```{r}
 ggplot(results_df, aes(time_index, value)) + geom_line() +
