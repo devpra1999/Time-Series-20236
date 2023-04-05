@@ -6,8 +6,8 @@ author: "Imanbayeva Sofya, Mazzi Lapo, Piras Mattia, Srivastava Dev\n \\vspace{1
 subtitle: "Group 22\n \\vspace{1in}"
 ---
 
-```{r setup, include=FALSE, echo=TRUE}
-knitr::opts_chunk$set(echo = FALSE, results = 'asis')
+```{r setup, include=FALSE, echo=TRUE,message = FALSE , warning = FALSE}
+knitr::opts_chunk$set(echo = FALSE,message = FALSE , warning = FALSE)
 list.of.packages <- c("fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang","tseries")
 if(!require(fpp2)){
     install.packages("fpp2")
@@ -44,7 +44,8 @@ if(!require(rlang)){
   if(!require(tseries)){
     install.packages("tseries")
     library(tseries)
-}
+  }
+library(xtable)
 ```
 \newpage
 
@@ -74,11 +75,51 @@ In order to apply an Hidden Markov Model, there is a series of assumptions that 
 
 Another condition that has to be met is  that there must be an underlying process behind the outcomes that can be represented with a discrete number of states.By looking at Graph 1, there seems to be two or three different states corresponding to the breakpoints in the time series. These might perhaps correspond to the business cycles or to states of trust in the Italian government. In turn, these hidden states must reflect a Markov Chain: namely the current state depends solely on the previous one. This assumption is difficult to prove, as there are many other factors that can influence the business cycle apart from the previous state. 
 Finally, the last assumption is that the visible outcomes must depend solely from current the hidden state and be independent of all the others. 
-
+\newpage
 
 ```{r model}
 model = depmix(ITAts ~ 1, data=data.frame(ITAts), nstates=3)
-model
+```
 
+```{r, comment=""}
+
+  cat('\n') 
+  model
+
+```
+```
+
+```{r MLE}
+fmodel <- fit(model)
+
+```
+
+```{r,echo=TRUE}
+summary(fmodel)
+```
+
+
+
+```{r}
+estStates <- posterior(fmodel)
+```
+
+```{r, out.width='40%'}
+plot(time(ITAts), estStates[,1],ylab= "PREDICTED STATE",xlab="TIME",  cex=.3, type="s")
+```
+```{r}
+```
+
+```{r}
+results_df <- data.frame(time_index = time(ITAts),
+  sample_trajectory = ITAts,
+  estimated_state=estStates[,1])%>%
+  gather("variable", "value", -time_index)
+```
+
+
+```{r}
+ggplot(results_df, aes(time_index, value)) + geom_line() +
+facet_wrap(variable ~ ., scales="free", ncol=1) + theme_minimal()
 
 ```
