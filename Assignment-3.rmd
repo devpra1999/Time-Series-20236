@@ -79,6 +79,6 @@ Finally, the last assumption is that the visible outcomes must depend solely fro
 ```{r model}
 model = depmix(ITAts ~ 1, data=data.frame(ITAts), nstates=3)
 model
-
+1
 
 ```
