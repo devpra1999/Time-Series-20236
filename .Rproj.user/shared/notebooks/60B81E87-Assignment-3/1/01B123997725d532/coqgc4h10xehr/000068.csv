@@ -1,0 +1,3 @@
+"0",""
+"0","ITAts=ts(HMMdataset$ITAbond_nom, start = c(format(HMMdataset$Time[1], ""%Y""), format(HMMdataset$Time[1], ""%m"")), frequency = 12)"
+"0",""
