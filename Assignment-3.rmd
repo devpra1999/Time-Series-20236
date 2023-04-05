@@ -76,3 +76,9 @@ Another condition that has to be met is  that there must be an underlying proces
 Finally, the last assumption is that the visible outcomes must depend solely from current the hidden state and be independent of all the others. 
 
 
+```{r model}
+model = depmix(ITAts ~ 1, data=data.frame(ITAts), nstates=2)
+model
+
+
+```
