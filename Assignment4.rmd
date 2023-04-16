@@ -8,7 +8,7 @@ subtitle: "Group 22\n \\vspace{1in}"
 
 ```{r setup, include=FALSE, echo=TRUE}
 knitr::opts_chunk$set(echo = FALSE, results = 'asis')
-list.of.packages <- c("fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang","tseries")
+list.of.packages <- c("fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang","tseries","zoo")
 if(!require(fpp2)){
     install.packages("fpp2")
     library(fpp2)
@@ -44,6 +44,10 @@ if(!require(rlang)){
   if(!require(tseries)){
     install.packages("tseries")
     library(tseries)
+  }
+  if(!require(zoo)){
+    install.packages("zoo")
+    library(zoo)
 }
 ```
 \newpage
@@ -53,5 +57,12 @@ if(!require(rlang)){
 airdataset=read.csv("https://raw.githubusercontent.com/devpra1999/Time-Series-20236/main/ts_epa_2020_west_sept_fill.csv",header = TRUE)
 attach(airdataset)
 st55datset= subset(airdataset,station_id==55)
+st55datset$Time <- as.Date(st55datset$datetime, format = "%Y-%m-%dT%hh")
 attach(st55datset)
+
+pm25ts <- zoo(st55datset$pm25, st55datset$datetime)
+daily_avg <- aggregate(pm25ts, as.Date(index(pm25ts)), mean)
+daily_avg_ma <- rollmean(daily_avg, k = 24, fill = NA)
+view(daily_avg_ma)
+plot(daily_avg_ma)
 ```
