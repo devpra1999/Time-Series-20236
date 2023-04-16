@@ -2,7 +2,12 @@
     "tempName": "Untitled1",
     "source_window_id": "",
     "Source": "Source",
+<<<<<<< HEAD
     "cursorPosition": "52,120",
     "scrollLine": "30",
+=======
+    "cursorPosition": "67,0",
+    "scrollLine": "66",
+>>>>>>> eb1f34b1209e176b02b62268538c6017570f0165
     "last_setup_crc32": ""
 }
