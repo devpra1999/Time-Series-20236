@@ -1,0 +1,53 @@
+---
+title: "Assignment-4\n \\vspace{1in}"
+author: |-
+  Imanbayeva Sofya, Mazzi Lapo, Piras Mattia, Srivastava Dev
+   \vspace{1in}
+date: "2023-03-31\n \\vspace{1in}"
+output:
+  pdf_document: default
+  word_document: default
+subtitle: |-
+  Group 22
+   \vspace{1in}
+---
+
+```{r setup, include=FALSE, echo=TRUE,message = FALSE , warning = FALSE}
+knitr::opts_chunk$set(echo = FALSE,message = FALSE , warning = FALSE)
+list.of.packages <- c("fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang","tseries")
+if(!require(fpp2)){
+    install.packages("fpp2")
+    library(fpp2)
+}
+if(!require(forecast)){
+    install.packages("forecast")
+    library(forecast)
+}
+if(!require(ggplot2)){
+    install.packages("ggplot2")
+    library(ggplot2)
+}
+if(!require(depmixS4)){
+    install.packages("depmixS4")
+    library(depmixS4)
+}
+if(!require(tidyverse)){
+    install.packages("tidyverse")
+    library(tidyverse)
+}
+if(!require(dplyr)){
+    install.packages("dplyr")
+    library(dplyr)
+}
+if(!require(rlang)){
+    install.packages("rlang")
+    library(rlang)
+}
+  if(!require(tseries)){
+    install.packages("tseries")
+    library(tseries)
+  }
+library(xtable)
+```
+
+

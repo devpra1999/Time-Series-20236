@@ -79,6 +79,11 @@ Finally, the last assumption is that the visible outcomes must depend solely fro
 ```{r model}
 model = depmix(ITAts ~ 1, data=data.frame(ITAts), nstates=3)
 model
-1
+fmodel = fit(model)
+fmodel
+summary(fmodel)
+estStates <- posterior(fmodel)
 
+plot(time(ITAts),estStates[,1], cex=.3)
+plot(ITAts)
 ```
