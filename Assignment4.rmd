@@ -50,4 +50,8 @@ if(!require(rlang)){
 
 
 ```{r loading dataset}
-HMMdataset=read.csv("https://raw.githubusercontent.com/devpra1999/Time-Series-20236/main/data_assHMM.csv",header = TRUE)
+airdataset=read.csv("https://raw.githubusercontent.com/devpra1999/Time-Series-20236/main/ts_epa_2020_west_sept_fill.csv",header = TRUE)
+attach(airdataset)
+st55datset= subset(airdataset,station_id==55)
+attach(st55datset)
+```
