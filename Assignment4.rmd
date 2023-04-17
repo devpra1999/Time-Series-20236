@@ -7,7 +7,7 @@ subtitle: "Group 22\n \\vspace{1in}"
 ---
 
 ```{r setup, include=FALSE, echo=TRUE}
-knitr::opts_chunk$set(echo = FALSE, results = 'asis')
+knitr::opts_chunk$set(echo = FALSE)
 list.of.packages <- c("fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang","tseries","zoo")
 if(!require(fpp2)){
     install.packages("fpp2")
@@ -50,10 +50,10 @@ if(!require(rlang)){
     library(zoo)
 }
 ```
+
 \newpage
 
-
-```{r loading dataset}
+```{r loading dataset, warning=FALSE, message= FALSE}
 airdataset=read.csv("https://raw.githubusercontent.com/devpra1999/Time-Series-20236/main/ts_epa_2020_west_sept_fill.csv",header = TRUE)
 attach(airdataset)
 st55datset= subset(airdataset,station_id==55)
@@ -69,6 +69,7 @@ daily_avg_ma_pm25 <- rollmean(daily_avg_pm25, k = 24, fill = NA)
 plot(daily_avg_ma_pm25,main = "Graph 1: Average PM25 levels at station 55, 2020", xlab = "Time", ylab= "Average PM25 level per day")
 
 ```
+
 Moving average dramatically increases in the beginning of August from around 17 to its peak in the beginning of September at around 60 in its PM25 levels. The values slightly decrease in September.
 
 ```{r ts temp}
@@ -77,6 +78,7 @@ daily_avg_t <- aggregate(tempts, as.Date(index(tempts)), mean)
 daily_avg_ma_t <- rollmean(daily_avg_t, k = 24, fill = NA)
 plot(daily_avg_ma_t, main = "Graph 2: Average Daily Temperature (C°) at station 55, 2020", xlab = "Time", ylab= "Average Daily Temperature (C°)")
 ```
+
 The temperature has been increasing from June's values of 24 degrees Celsius to its peak in August at around 28.
 
 ```{r ts wind}
@@ -85,6 +87,7 @@ daily_avg_w <- aggregate(windts, as.Date(index(windts)), mean)
 daily_avg_ma_w <- rollmean(daily_avg_w, k = 24, fill = NA)
 plot(daily_avg_ma_w, main = "Graph 3: Average Wind Speed (knots/second) at station 55, 2020", xlab = "Time", ylab= "Average Wind Speed (knots/second)")
 ```
+
 Average wind level has been stable at around 14m/s in the summer and started to decrease in the second part of August to around 12 in mid-September.
 
 ```{r compare}
@@ -93,6 +96,7 @@ lines(scale(daily_avg_ma_w), col = "blue")
 lines(scale(daily_avg_ma_t), col = "red")
 legend("bottomleft", legend = c("PM25","Wind", "Temp"), col = c("darkgreen","blue","red"), lty = c(1,1,1), cex = 0.5)
 ```
+
 High average temperature in August and comparatively strong winds seem to have a correlation with fires, which have increased the values of PM25 particles in the air. There is around 10 day lag between the temperature increases and PM25 value increase in August.
 
 ```{r PM25 levels}
@@ -111,6 +115,7 @@ p <- ggplot(data=st55datset, aes(x=Time, y=pm25)) +
   labs(x=NULL, y=NULL)
 p
 ```
+
 Majority of measurements from June to mid-August are smaller than the prescribed limit with the exception of a peak of an outlying 307.81 in July. However, since then until October, the dynamic has changed with only a few days where the values staying within the limit constraints below 25. The peaks are high, probably resulted from fires, high temperatures and strong wind.
 
 ```{r wind levels}
@@ -124,14 +129,15 @@ Majority of measurements from June to mid-August are smaller than the prescribed
    labs(x=NULL, y=NULL)
  windy
 ```
-First, we  set up our model. The initial probabilities and the transition matrix are just made by default values. Since, there are 3 states, they will have 1/3 probability each.
+
+First, we set up our model. The initial probabilities and the transition matrix are just made by default values. Since, there are 3 states, they will have 1/3 probability each.
 
 ```{r model}
 y=as.numeric(st55datset$pm25)
 model = depmix(y~ 1, data=data.frame(y), nstates=3)
 ```
 
-```{r, comment=""}
+```{r}
 
   cat('\n') 
   model
@@ -139,17 +145,18 @@ model = depmix(y~ 1, data=data.frame(y), nstates=3)
 
 ```
 
-
 ```{r MLE}
 fmodel <- fit(model)
 
 ```
+
 The results of the estimation of both the initial probabilities and the transition matrix are indicated below.
+
 ```{r,echo=TRUE}
 summary(fmodel)
 ```
-First thing looking at the mean for the parameters of the emissions distribution we can identify the three states that we wanted to study. State 2 is the one relative to low pollution, state 3 is relative to high pollution levels and state 1 is the one that we can associate to a medium pollution levels.
-Looking at the transition matrix we note that there are steps that are never possible, state 1 to 3 and vice versa.
+
+First thing looking at the mean for the parameters of the emissions distribution we can identify the three states that we wanted to study. State 2 is the one relative to low pollution, state 3 is relative to high pollution levels and state 1 is the one that we can associate to a medium pollution levels. Looking at the transition matrix we note that there are steps that are never possible, state 1 to 3 and vice versa.
 
 Further, the states are very persistent, and probability of state transition by a single step is very low, and by two steps virtually zero. Thus, the current state is a very good predictor of the state in the next hour.
 
@@ -159,10 +166,11 @@ If the current state is of medium pollution, there is a need to enforce strict m
 
 Finally, if the pollution is high prolonged strict measures should be anticipated to bring it down medium pollution and finally to low pollution (prolonged because) both high and medium pollution states being highly persistent.
 
-```{r}
+```{r,comment="",warning=FALSE}
 estStates <- posterior(fmodel)
 ```
-```{r, out.width='40%'}
+
+```{r, out.width='100%'}
 plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "PREDICTED STATE",xlab="TIME",  cex=.3, type="s")
 
 ```
