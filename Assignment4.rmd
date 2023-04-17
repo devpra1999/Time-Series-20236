@@ -148,6 +148,6 @@ summary(fmodel)
 estStates <- posterior(fmodel)
 ```
 ```{r, out.width='40%'}
-plot(time(st55datset$datetime), estStates[,1],ylab= "PREDICTED STATE",xlab="TIME",  cex=.3, type="s")
+plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "PREDICTED STATE",xlab="TIME",  cex=.3, type="s")
 
 ```
