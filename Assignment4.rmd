@@ -63,14 +63,45 @@ attach(st55datset)
 ```
 
 
-```{r time series}
+<<<<<<< HEAD
+```{r time series and moving average}
 pm25ts <- zoo(st55datset$pm25, st55datset$datetime)
 daily_avg <- aggregate(pm25ts, as.Date(index(pm25ts)), mean)
 daily_avg_ma <- rollmean(daily_avg, k = 24, fill = NA)
-View(daily_avg_ma)
-plot(daily_avg_ma)
+plot(daily_avg_ma,main = "Graph 1: Average PM25 levels at station 55, June-September 2020", xlab = "Time", ylab= "Average PM25 level per day")
+
+```
+```{r time series pm25}
+pm25ts <- zoo(st55datset$pm25, st55datset$datetime)
+daily_avg_pm25 <- aggregate(pm25ts, as.Date(index(pm25ts)), mean)
+daily_avg_ma_pm25 <- rollmean(daily_avg_pm25, k = 24, fill = NA)
+plot(daily_avg_ma_pm25)
+
 ```
 Moving average dramatically increases in the beginning of August from around 17 to its peak in the beginning of September at around 60 in its PM25 levels. The values slightly decrease in September.
+
+```{r ts temp}
+tempts <- zoo(st55datset$temp, st55datset$datetime)
+daily_avg_t <- aggregate(tempts, as.Date(index(tempts)), mean)
+daily_avg_ma_t <- rollmean(daily_avg_t, k = 24, fill = NA)
+plot(daily_avg_ma_t)
+```
+
+
+```{r ts wind}
+windts <- zoo(st55datset$wind, st55datset$datetime)
+daily_avg_w <- aggregate(windts, as.Date(index(windts)), mean)
+daily_avg_ma_w <- rollmean(daily_avg_w, k = 24, fill = NA)
+plot(daily_avg_ma_w)
+```
+
+```{r compare}
+plot(scale(daily_avg_ma_pm25), col = "darkgreen")
+lines(scale(daily_avg_ma_w), col = "blue")
+lines(scale(daily_avg_ma_t), col = "red")
+legend("bottomleft", legend = c("PM25","Wind", "Temp"), col = c("darkgreen","blue","red"), lty = c(1,1,1), cex = 0.5)
+```
+
 
 ```{r PM25 levels}
 xmin = min(st55datset$Time)
@@ -81,7 +112,7 @@ p <- ggplot(data=st55datset, aes(x=Time, y=pm25)) +
   ggtitle("PM2.5 levels at Station #55") +
   geom_rect(aes(xmin=xmin, xmax=xmax, ymin=25, ymax=ymax), fill=adjustcolor("pink",alpha.f=0.9), alpha=.2) +
   geom_line() +
-  annotate(geom="text", x=as.POSIXct("2020-06-17"), y=200, label="Dangerous PM2.5 level", color="darkred") +
+  annotate(geom="text", x=as.POSIXct("2020-06-20"), y=200, label="Dangerous PM2.5 level", color="darkred") +
   geom_hline(yintercept=25, color="darkred") + 
   scale_y_continuous(expand=c(0,0)) +
 #  scale_x_date(limit=c(as.POSIXct("2020-06-01 00:00:00"),as.POSIXct("2020-09-30 23:00:00")))+
@@ -93,13 +124,13 @@ Majority of measurements from June to mid-August are smaller than the prescribed
 ```{r wind levels}
 ### Time should be fixed and the average(?) of wind taken into account
 
-# windy <- ggplot(data=st55datset, aes(x=Time, y=wind)) +
-#   ggtitle("Wind strength") +
-#   geom_line() + 
-#   scale_y_continuous(expand=c(0,0)) +
+ windy <- ggplot(data=st55datset, aes(x=Time, y=wind)) +
+   ggtitle("Wind strength") +
+   geom_line() + 
+   scale_y_continuous(expand=c(0,0)) +
 #   scale_x_date(limit=c(as.Date("2020-06-01"),as.Date("2020-09-30")))+
-#   labs(x=NULL, y=NULL)
-# windy
+   labs(x=NULL, y=NULL)
+ windy
 ```
 ```{r model}
 y=as.numeric(st55datset$pm25)
