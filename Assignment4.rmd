@@ -83,12 +83,12 @@ The temperature has been increasing from June's values of 24 degrees Celsius to 
 windts <- zoo(st55datset$wind, st55datset$datetime)
 daily_avg_w <- aggregate(windts, as.Date(index(windts)), mean)
 daily_avg_ma_w <- rollmean(daily_avg_w, k = 24, fill = NA)
-plot(daily_avg_ma_w, main = "Graph 3: Average Wind Speed (knots/second) at station 55, 2020", xlab = "Time", ylab= "Average Wind Speed (knots/second)"
+plot(daily_avg_ma_w, main = "Graph 3: Average Wind Speed (knots/second) at station 55, 2020", xlab = "Time", ylab= "Average Wind Speed (knots/second)")
 ```
 Average wind level has been stable at around 14m/s in the summer and started to decrease in the second part of August to around 12 in mid-September.
 
 ```{r compare}
-plot(scale(daily_avg_ma_pm25), col = "darkgreen", main = "Graph 4: Scaled development of PM25, temperature and wind, June-September 2020", cex.main=0.9,xlab = "Time", ylab= "Average Temperature level per day")
+plot(scale(daily_avg_ma_pm25), col = "darkgreen", main = "Graph 4: Scaled development of PM25, temperature and wind, 2020", cex.main=0.9,xlab = "Time", ylab= "Average Temperature level per day")
 lines(scale(daily_avg_ma_w), col = "blue")
 lines(scale(daily_avg_ma_t), col = "red")
 legend("bottomleft", legend = c("PM25","Wind", "Temp"), col = c("darkgreen","blue","red"), lty = c(1,1,1), cex = 0.5)
