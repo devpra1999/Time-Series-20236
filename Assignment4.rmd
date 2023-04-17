@@ -62,20 +62,12 @@ st55datset$Time <- as.POSIXct(st55datset$datetime, format = "%Y-%m-%dT%H:%M:%SZ"
 attach(st55datset)
 ```
 
-
-<<<<<<< HEAD
-```{r time series and moving average}
-pm25ts <- zoo(st55datset$pm25, st55datset$datetime)
-daily_avg <- aggregate(pm25ts, as.Date(index(pm25ts)), mean)
-daily_avg_ma <- rollmean(daily_avg, k = 24, fill = NA)
-plot(daily_avg_ma,main = "Graph 1: Average PM25 levels at station 55, June-September 2020", xlab = "Time", ylab= "Average PM25 level per day")
-=======
 ```{r time series pm25}
 pm25ts <- zoo(st55datset$pm25, st55datset$datetime)
 daily_avg_pm25 <- aggregate(pm25ts, as.Date(index(pm25ts)), mean)
 daily_avg_ma_pm25 <- rollmean(daily_avg_pm25, k = 24, fill = NA)
-plot(daily_avg_ma_pm25)
->>>>>>> 8d68730aa2e2aa206d09388213120dadd3f332ae
+plot(daily_avg_ma_pm25,main = "Graph 1: Average PM25 levels at station 55, June-September 2020", xlab = "Time", ylab= "Average PM25 level per day")
+
 ```
 Moving average dramatically increases in the beginning of August from around 17 to its peak in the beginning of September at around 60 in its PM25 levels. The values slightly decrease in September.
 
