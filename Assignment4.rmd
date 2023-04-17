@@ -101,3 +101,31 @@ Majority of measurements from June to mid-August are smaller than the prescribed
 #   labs(x=NULL, y=NULL)
 # windy
 ```
+```{r model}
+y=as.numeric(st55datset$pm25)
+model = depmix(y~ 1, data=data.frame(y), nstates=3)
+```
+
+```{r, comment=""}
+
+  cat('\n') 
+  model
+
+
+```
+
+```{r MLE}
+fmodel <- fit(model)
+
+```
+
+```{r,echo=TRUE}
+summary(fmodel)
+```
+```{r}
+estStates <- posterior(fmodel)
+```
+```{r, out.width='40%'}
+plot(time(st55datset$datetime), estStates[,1],ylab= "PREDICTED STATE",xlab="TIME",  cex=.3, type="s")
+
+```
