@@ -124,6 +124,7 @@ Majority of measurements from June to mid-August are smaller than the prescribed
    labs(x=NULL, y=NULL)
  windy
 ```
+First, we  set up our model. The initial probabilities and the transition matrix are just made by default values. Since, there are 3 states, they will have 1/3 probability each.
 
 ```{r model}
 y=as.numeric(st55datset$pm25)
@@ -138,14 +139,18 @@ model = depmix(y~ 1, data=data.frame(y), nstates=3)
 
 ```
 
+
 ```{r MLE}
 fmodel <- fit(model)
 
 ```
-
+The results of the estimation of both the initial probabilities and the transition matrix are indicated below.
 ```{r,echo=TRUE}
 summary(fmodel)
 ```
+First thing looking at the mean for the parameters of the emissions distribution we can identify the three states that we wanted to study. State 2 is the one relative to low pollution, state 3 is relative to high pollution levels and state 1 is the one that we can associate to a medium pollution levels.
+Looking at the transition matrix we note that there are steps that are never possible, such as the one from state 2 to 3.
+
 ```{r}
 estStates <- posterior(fmodel)
 ```
