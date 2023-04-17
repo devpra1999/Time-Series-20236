@@ -149,7 +149,7 @@ The results of the estimation of both the initial probabilities and the transiti
 summary(fmodel)
 ```
 First thing looking at the mean for the parameters of the emissions distribution we can identify the three states that we wanted to study. State 2 is the one relative to low pollution, state 3 is relative to high pollution levels and state 1 is the one that we can associate to a medium pollution levels.
-Looking at the transition matrix we note that there are steps that are never possible, such as the one from state 2 to 3.
+Looking at the transition matrix we note that there are steps that are never possible, state 1 to 3 and vice versa.
 
 ```{r}
 estStates <- posterior(fmodel)
