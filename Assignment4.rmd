@@ -90,6 +90,7 @@ plot(daily_avg_ma_w)
 plot(scale(daily_avg_ma_pm25), col = "darkgreen")
 lines(scale(daily_avg_ma_w), col = "blue")
 lines(scale(daily_avg_ma_t), col = "red")
+legend("bottomleft", legend = c("PM25","Wind", "Temp"), col = c("darkgreen","blue","red"), lty = c(1,1,1), cex = 0.5)
 ```
 
 
