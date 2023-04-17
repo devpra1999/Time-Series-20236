@@ -57,7 +57,7 @@ if(!require(rlang)){
 airdataset=read.csv("https://raw.githubusercontent.com/devpra1999/Time-Series-20236/main/ts_epa_2020_west_sept_fill.csv",header = TRUE)
 attach(airdataset)
 st55datset= subset(airdataset,station_id==55)
-st55datset$Time <- as.Date(st55datset$datetime, format = "%Y-%m-%d")
+st55datset$Time <- as.POSIXct(st55datset$datetime, format = "%Y-%m-%dT%H:%M:%SZ")
 ## had some troubles with Time, the previous one with T%hh resulted in NA values, had to get rid of hours, but maybe there's a better solution 
 attach(st55datset)
 ```
