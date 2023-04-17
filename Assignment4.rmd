@@ -151,6 +151,14 @@ summary(fmodel)
 First thing looking at the mean for the parameters of the emissions distribution we can identify the three states that we wanted to study. State 2 is the one relative to low pollution, state 3 is relative to high pollution levels and state 1 is the one that we can associate to a medium pollution levels.
 Looking at the transition matrix we note that there are steps that are never possible, state 1 to 3 and vice versa.
 
+Further, the states are very persistent, and probability of state transition by a single step is very low, and by two steps virtually zero. Thus, the current state is a very good predictor of the state in the next hour.
+
+If the current state is of low pollution, there is not much need to enforce any strict measures, with an extremely high probability (0.993) of staying the same low pollution state.
+
+If the current state is of medium pollution, there is a need to enforce strict measures for some time, given the large probability of staying in the medium state (0.95), and also a possibility of transitioning to high pollution state in the next hour(0.026).
+
+Finally, if the pollution is high prolonged strict measures should be anticipated to bring it down medium pollution and finally to low pollution (prolonged because) both high and medium pollution states being highly persistent.
+
 ```{r}
 estStates <- posterior(fmodel)
 ```
