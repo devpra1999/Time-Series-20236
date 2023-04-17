@@ -66,7 +66,7 @@ attach(st55datset)
 pm25ts <- zoo(st55datset$pm25, st55datset$datetime)
 daily_avg_pm25 <- aggregate(pm25ts, as.Date(index(pm25ts)), mean)
 daily_avg_ma_pm25 <- rollmean(daily_avg_pm25, k = 24, fill = NA)
-plot(daily_avg_ma_pm25,main = "Graph 1: Average PM25 levels at station 55, June-September 2020", xlab = "Time", ylab= "Average PM25 level per day")
+plot(daily_avg_ma_pm25,main = "Graph 1: Average PM25 levels at station 55, 2020", xlab = "Time", ylab= "Average PM25 level per day")
 
 ```
 Moving average dramatically increases in the beginning of August from around 17 to its peak in the beginning of September at around 60 in its PM25 levels. The values slightly decrease in September.
@@ -75,7 +75,7 @@ Moving average dramatically increases in the beginning of August from around 17 
 tempts <- zoo(st55datset$temp, st55datset$datetime)
 daily_avg_t <- aggregate(tempts, as.Date(index(tempts)), mean)
 daily_avg_ma_t <- rollmean(daily_avg_t, k = 24, fill = NA)
-plot(daily_avg_ma_t, main = "Graph 2: Average temperature levels at station 55, June-September 2020", xlab = "Time", ylab= "Average temperature level per day")
+plot(daily_avg_ma_t, main = "Graph 2: Average Daily Temperature (C°) at station 55, 2020", xlab = "Time", ylab= "Average Daily Temperature (C°)")
 ```
 The temperature has been increasing from June's values of 24 degrees Celsius to its peak in August at around 28.
 
@@ -83,7 +83,7 @@ The temperature has been increasing from June's values of 24 degrees Celsius to 
 windts <- zoo(st55datset$wind, st55datset$datetime)
 daily_avg_w <- aggregate(windts, as.Date(index(windts)), mean)
 daily_avg_ma_w <- rollmean(daily_avg_w, k = 24, fill = NA)
-plot(daily_avg_ma_w,main = "Graph 3: Average wind levels at station 55, June-September 2020", xlab = "Time", ylab= "Average wind level per day")
+plot(daily_avg_ma_w, main = "Graph 3: Average Wind Speed (knots/second) at station 55, 2020", xlab = "Time", ylab= "Average Wind Speed (knots/second)"
 ```
 Average wind level has been stable at around 14m/s in the summer and started to decrease in the second part of August to around 12 in mid-September.
 
@@ -155,6 +155,6 @@ Looking at the transition matrix we note that there are steps that are never pos
 estStates <- posterior(fmodel)
 ```
 ```{r, out.width='40%'}
-plot(time(st55datset$datetime), estStates[,1],ylab= "PREDICTED STATE",xlab="TIME",  cex=.3, type="s")
+plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "PREDICTED STATE",xlab="TIME",  cex=.3, type="s")
 
 ```
