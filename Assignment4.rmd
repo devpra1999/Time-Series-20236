@@ -83,7 +83,7 @@ plot(daily_avg_ma_t, main = "Graph 2: Average Daily Temperature (C°) at station
 windts <- zoo(st55datset$wind, st55datset$datetime)
 daily_avg_w <- aggregate(windts, as.Date(index(windts)), mean)
 daily_avg_ma_w <- rollmean(daily_avg_w, k = 24, fill = NA)
-plot(daily_avg_ma_w)
+plot(daily_avg_ma_w, main = "Graph 3: Average Wind Speed (knots/second) at station 55, June-September 2020", xlab = "Time", ylab= "Average Wind Speed (knots/second)")
 ```
 
 ```{r compare}
