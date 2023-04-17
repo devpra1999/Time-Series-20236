@@ -80,11 +80,11 @@ ymax = max(st55datset$pm25)
 p <- ggplot(data=st55datset, aes(x=Time, y=pm25)) +
   ggtitle("PM2.5 levels at Station #55") +
   geom_rect(aes(xmin=xmin, xmax=xmax, ymin=25, ymax=ymax), fill=adjustcolor("pink",alpha.f=0.9), alpha=.2) +
-  geom_line() + 
-  annotate(geom="text", x=as.Date("2020-06-17"), y=200, label="Dangerous PM2.5 level", color="darkred") +
+  geom_line() +
+  annotate(geom="text", x=as.POSIXct("2020-06-17"), y=200, label="Dangerous PM2.5 level", color="darkred") +
   geom_hline(yintercept=25, color="darkred") + 
   scale_y_continuous(expand=c(0,0)) +
-  scale_x_date(limit=c(as.Date("2020-06-01"),as.Date("2020-09-30")))+
+#  scale_x_date(limit=c(as.POSIXct("2020-06-01 00:00:00"),as.POSIXct("2020-09-30 23:00:00")))+
   labs(x=NULL, y=NULL)
 p
 ```
