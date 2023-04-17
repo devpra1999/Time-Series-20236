@@ -1,0 +1,103 @@
+---
+title: "Assignment-3\n \\vspace{1in}"
+output: pdf_document
+date: "2023-03-31\n \\vspace{1in}"
+author: "Imanbayeva Sofya, Mazzi Lapo, Piras Mattia, Srivastava Dev\n \\vspace{1in}"
+subtitle: "Group 22\n \\vspace{1in}"
+---
+
+```{r setup, include=FALSE, echo=TRUE}
+knitr::opts_chunk$set(echo = FALSE, results = 'asis')
+list.of.packages <- c("fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang","tseries","zoo")
+if(!require(fpp2)){
+    install.packages("fpp2")
+    library(fpp2)
+}
+if(!require(forecast)){
+    install.packages("forecast")
+    library(forecast)
+}
+if(!require(ggplot2)){
+    install.packages("ggplot2")
+    library(ggplot2)
+}
+
+if(!require(depmixS4)){
+    install.packages("depmixS4")
+    library(depmixS4)
+}
+
+if(!require(tidyverse)){
+    install.packages("tidyverse")
+    library(tidyverse)
+}
+
+if(!require(dplyr)){
+    install.packages("dplyr")
+    library(dplyr)
+}
+
+if(!require(rlang)){
+    install.packages("rlang")
+    library(rlang)
+}
+  if(!require(tseries)){
+    install.packages("tseries")
+    library(tseries)
+  }
+  if(!require(zoo)){
+    install.packages("zoo")
+    library(zoo)
+}
+```
+\newpage
+
+
+```{r loading dataset}
+airdataset=read.csv("https://raw.githubusercontent.com/devpra1999/Time-Series-20236/main/ts_epa_2020_west_sept_fill.csv",header = TRUE)
+attach(airdataset)
+st55datset= subset(airdataset,station_id==55)
+st55datset$Time <- as.POSIXct(st55datset$datetime, format = "%Y-%m-%dT%H:%M:%SZ")
+## had some troubles with Time, the previous one with T%hh resulted in NA values, had to get rid of hours, but maybe there's a better solution 
+attach(st55datset)
+```
+
+
+```{r time series}
+pm25ts <- zoo(st55datset$pm25, st55datset$datetime)
+daily_avg <- aggregate(pm25ts, as.Date(index(pm25ts)), mean)
+daily_avg_ma <- rollmean(daily_avg, k = 24, fill = NA)
+View(daily_avg_ma)
+plot(daily_avg_ma)
+```
+Moving average dramatically increases in the beginning of August from around 17 to its peak in the beginning of September at around 60 in its PM25 levels. The values slightly decrease in September.
+
+```{r PM25 levels}
+xmin = min(st55datset$Time)
+xmax = max(st55datset$Time)
+ymax = max(st55datset$pm25)
+
+p <- ggplot(data=st55datset, aes(x=Time, y=pm25)) +
+  ggtitle("PM2.5 levels at Station #55") +
+  geom_rect(aes(xmin=xmin, xmax=xmax, ymin=25, ymax=ymax), fill=adjustcolor("pink",alpha.f=0.9), alpha=.2) +
+  geom_line() + 
+  annotate(geom="text", x=as.Date("2020-06-17"), y=200, label="Dangerous PM2.5 level", color="darkred") +
+  geom_hline(yintercept=25, color="darkred") + 
+  scale_y_continuous(expand=c(0,0)) +
+  scale_x_date(limit=c(as.Date("2020-06-01"),as.Date("2020-09-30")))+
+  labs(x=NULL, y=NULL)
+p
+```
+Majority of measurements from June to mid-August are smaller than the prescribed limit with the exception of a peak of an outlying 307.81 in July. However, since then until October, the dynamic has changed with only a few days where the values staying within the limit constraints below 25. The peaks are high, probably resulted from fires, high temperatures and strong wind.
+
+```{r wind levels}
+### Time should be fixed and the average(?) of wind taken into account
+
+# windy <- ggplot(data=st55datset, aes(x=Time, y=wind)) +
+#   ggtitle("Wind strength") +
+#   geom_line() + 
+#   scale_y_continuous(expand=c(0,0)) +
+#   scale_x_date(limit=c(as.Date("2020-06-01"),as.Date("2020-09-30")))+
+#   labs(x=NULL, y=NULL)
+# windy
+```
