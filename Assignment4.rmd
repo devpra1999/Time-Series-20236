@@ -75,7 +75,7 @@ Moving average dramatically increases in the beginning of August from around 17 
 tempts <- zoo(st55datset$temp, st55datset$datetime)
 daily_avg_t <- aggregate(tempts, as.Date(index(tempts)), mean)
 daily_avg_ma_t <- rollmean(daily_avg_t, k = 24, fill = NA)
-plot(daily_avg_ma_t)
+plot(daily_avg_ma_t, main = "Graph 2: Average Daily Temperature (C°) at station 55, June-September 2020", xlab = "Time", ylab= "Average Daily Temperature (C°)")
 ```
 
 
