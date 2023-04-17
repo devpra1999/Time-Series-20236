@@ -158,7 +158,7 @@ summary(fmodel)
 ```
 
 
-First thing looking at the mean for the parameters of the emissions distribution we can identify the three states that we wanted to study. State 2 is the one relative to low pollution, state 3 is relative to high pollution levels and state 1 is the one that we can associate to a medium pollution levels. Looking at the transition matrix we note that there are steps that are never possible, state 3 to 1 and vice versa.
+Firstly, we can identify the three states that we wanted to study. State 1 is the one relative to low pollution, state 3 is relative to high pollution levels and state 2 is the one that we can associate to a medium pollution levels. Looking at the transition matrix we note that there are steps that are never possible, state 3 to 1 and vice versa.
 
 Further, the states are very persistent, and probability of state transition by a single step is very low, and by two steps virtually zero. Thus, the current state is a very good predictor of the state in the next hour.
 
