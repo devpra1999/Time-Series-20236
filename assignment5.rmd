@@ -76,10 +76,8 @@ NileFilt <- dlmFilter(Nile, mod)
 Plotting the filtered estimates we get
 
 ```{r plot filtered estimates}
-plot(dropFirst(NileFilt$m),ylab = "Filtered Estimates", main = "Graph 2")
+plot(dropFirst(NileFilt$m),ylab = "Filtered Estimates", main = "Graph 2: Filtered Estimates")
 ```
-
-i'm doing this because i don't know if there's any hidden function in this second method
 
 ```{r re-estimating}
 mod <- dlmModPoly(1,dV=15100, dW=1470)
@@ -87,15 +85,16 @@ outFilt<- dlmFilter(Nile,mod)
 names(outFilt)
 filterEstimates= window(outFilt$m,start=start(Nile)[1])
 ```
-computing the variance 
+
+Computing the variance 
 ```{r variance comput,outwidth=0.9}
 n <- length(Nile)
 listC <- dlmSvd2var(outFilt$U.C, outFilt$D.C)
 sqrtC <- sqrt(unlist(listC))
-ts.plot(sqrtC[-1], ylab="standard deviation", main = "Graph 3")
+ts.plot(sqrtC[-1], ylab="standard deviation", main = "Graph 3: Standard deviation of filtering states estimates")
 ```
 
-As we can see from the graph above, the standard deviations of the filtering state reach their maximal values at the beginning of the time series, while sharply decreasing as time pass by. This reflect the fact that we have less information about the initial state of the system. As new observations arrive the filtering state estimates become more and more accurate, hence the decrease in the standard deviations over time. 
+As we can see from the graph above, the standard deviations of the filtering state have their maximal values at the beginning of the time series, sharply decreasing as time pass by. This reflects the fact that we have less information about the initial state of the system. As new observations arrive the filtering state estimates become more and more accurate, hence the observation of the decrease in the standard deviations over time. 
 
 We finally plot the whole data along with the filtered estimates with 95% confidence interval
 
@@ -111,11 +110,7 @@ lty = c("solid", "solid", "dotdash"),
 pch = c(16, NA, NA))
 ```
 
-
 FORECASTING
-
-
-
 
 ```{r compute sd for forecast}
 varR <- unlist(dlmSvd2var(NileFilt$U.R,NileFilt$D.R))
@@ -123,13 +118,12 @@ sdR <- sqrt(varR)
 ```
 
 
-
 ```{r forecasting}
 par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.6)
 a <- window(cbind(Nile, NileFilt$f),
 start = 1871, end = 1970)
 plot(a[, 1], type = 'o', col = "black",
-xlab = "", ylab = "Level")
+xlab = "", ylab = "Level",main = "Graph 5: One Step ahead Forecasts with 95% CI")
 lines(dropFirst(a[, 2]), lty = "solid", col='red')
 lines(dropFirst(a[, 2] + 1.96*sdR), lty = "dotdash", col='blue')
 lines(dropFirst(a[, 2] - 1.96*sdR), lty = "dotdash", col='blue')
@@ -139,7 +133,7 @@ col = c("black", "red","blue"),
 lty = c("solid", "solid", "dotdash"),
 pch = c(16, NA, NA))
 ```
-variances here are random numbers i've choosen. As i said i'm not very fond of this part of theory so if you have better guesses on what values may be of interest feel free to change them 
+
 
 ```{r Playing with signal to noise ratio}
 mod1 <- dlmModPoly(order = 1, dV =100000 , dW =1300)
@@ -153,10 +147,9 @@ outFilt2 <- dlmFilter(Nile,mod2)
 mod2$W/mod2$V
 ```
 
-just the graph
 ```{r signal to noise graph}
 par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.9)
-plot(Nile,type="o", xlab = "", ylab = "Level",col='black')
+plot(Nile,type="o", xlab = "", ylab = "Level",col='black', main = "Graph 6: Signal-to-noise")
 lines(dropFirst(outFilt1$m), lty = "longdash", col='red')
 lines(dropFirst(outFilt2$m), lty = "dotdash", col='blue')
 leg <- c("data", paste("filtered, W/V =",
