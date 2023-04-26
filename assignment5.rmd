@@ -94,7 +94,9 @@ listC <- dlmSvd2var(outFilt$U.C, outFilt$D.C)
 sqrtC <- sqrt(unlist(listC))
 ts.plot(sqrtC[-1], ylab="standard deviation")
 ```
+
 As we can see from the graph above, the standard deviations of the filtering state reach their maximal values at the beginning of the time series, while sharply decreasing as time pass by. This reflect the fact that we have less information about the initial state of the system. As new observations arrive the filtering state estimates become more and more accurate, hence the decrease in the standard deviations over time. 
+
 
 FORECASTING
 
@@ -124,17 +126,19 @@ lty = c("solid", "longdash", "dotdash"),
 pch = c(1, NA, NA), bty = "n")
 ```
 variances here are random numbers i've choosen. As i said i'm not very fond of this part of theory so if you have better guesses on what values may be of interest feel free to change them 
+
 ```{r Playing with signal to noise ratio}
-mod1 <- dlmModPoly(order = 1, dV =14000 , dW =1300)
+mod1 <- dlmModPoly(order = 1, dV =100000 , dW =1300)
 outFilt1 <- dlmFilter(Nile,mod1)
 mod1$W/mod1$V
 
 ```
 ```{r Playing with signal to noise ratio again}
-mod2 <- dlmModPoly(order = 1, dV =15000 , dW =500)
+mod2 <- dlmModPoly(order = 1, dV =15000 , dW =5000000)
 outFilt2 <- dlmFilter(Nile,mod2)
 mod2$W/mod2$V
 ```
+
 just the graph
 ```{r signal to noise graph}
 par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.9)
