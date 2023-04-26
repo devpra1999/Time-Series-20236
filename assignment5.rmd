@@ -59,6 +59,7 @@ if(!require(rlang)){
 
 plot(Nile, main = "Graph 1: River Nile annual flow in 10^8 cubic meters (1871-1970)", xlab = "Time", ylab= "Water flow in 10^8 cubic meters")
 ```
+
 Let us consider the following random walk plus noise model to be applied to the Nile data:
 \begin{eqnarray*} 
 Y_t &= \theta_t + v_t \quad    & v_t \overset{i.i.d.}\sim N(0, V)\\
