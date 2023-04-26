@@ -1,0 +1,52 @@
+---
+title: "Assignment-5\n \\vspace{1in}"
+output: pdf_document
+date: "2023-03-31\n \\vspace{1in}"
+author: "Imanbayeva Sofya, Mazzi Lapo, Piras Mattia, Srivastava Dev\n \\vspace{1in}"
+subtitle: "Group 22\n \\vspace{1in}"
+---
+
+```{r setup, include=FALSE, echo=TRUE}
+knitr::opts_chunk$set(echo = FALSE, out.height = "75%", out.width = "75%")
+list.of.packages <- c("fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang","tseries","zoo")
+if(!require(fpp2)){
+    install.packages("fpp2")
+    library(fpp2)
+}
+if(!require(forecast)){
+    install.packages("forecast")
+    library(forecast)
+}
+if(!require(ggplot2)){
+    install.packages("ggplot2")
+    library(ggplot2)
+}
+if(!require(depmixS4)){
+    install.packages("depmixS4")
+    library(depmixS4)
+}
+if(!require(markovchain)){
+    install.packages("markovchain")
+    library(markovchain)
+}
+if(!require(tidyverse)){
+    install.packages("tidyverse")
+    library(tidyverse)
+}
+if(!require(dplyr)){
+    install.packages("dplyr")
+    library(dplyr)
+}
+if(!require(rlang)){
+    install.packages("rlang")
+    library(rlang)
+}
+  if(!require(tseries)){
+    install.packages("tseries")
+    library(tseries)
+  }
+  if(!require(zoo)){
+    install.packages("zoo")
+    library(zoo)
+}
+```
