@@ -53,5 +53,5 @@ if(!require(rlang)){
 
 ```{r}
 
-
+plot(Nile, main = "Graph 1: River Nile annual flow in 10^8 cubic meters (1871-1970)", xlab = "Time", ylab= "Water flow in 10^8 cubic meters")
 ```
