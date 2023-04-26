@@ -1,11 +1,11 @@
 ---
 title: "Assignment-5\n \\vspace{1in}"
 output: pdf_document
-date: "2023-03-31\n \\vspace{1in}"
+date: "2023-04-26\n \\vspace{1in}"
 author: "Imanbayeva Sofya, Mazzi Lapo, Piras Mattia, Srivastava Dev\n \\vspace{1in}"
 subtitle: "Group 22\n \\vspace{1in}"
 ---
-
+\newpage
 ```{r setup, include=FALSE, echo=TRUE}
 knitr::opts_chunk$set(echo = FALSE, out.height = "75%", out.width = "75%")
 list.of.packages <- c("dlm", "fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang","tseries","zoo")
@@ -55,12 +55,15 @@ if(!require(rlang)){
 }
 ```
 
-```{r Nile graph}
+# Question 1 - Filtered Estimates
 
+The following plot shows the annual flow in the river Nile, the data we are going to model using a dynamic linear model
+```{r Nile graph}
+par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.6)
 plot(Nile, main = "Graph 1: River Nile annual flow in 10^8 cubic meters (1871-1970)", xlab = "Time", ylab= "Water flow in 10^8 cubic meters")
 ```
 
-Let us consider the following random walk plus noise model to be applied to the Nile data:
+Let us consider the following random walk plus noise model to be applied to this Nile data:
 \begin{eqnarray*} 
 Y_t &= \theta_t + v_t \quad    & v_t \overset{i.i.d.}\sim N(0, V)\\
 \theta_t &= \theta_{t-1} + w_t \quad   & v_t \overset{i.i.d.}\sim N(0, W)
@@ -75,27 +78,20 @@ NileFilt <- dlmFilter(Nile, mod)
 
 Plotting the filtered estimates we get
 
-```{r plot filtered estimates}
-plot(dropFirst(NileFilt$m),ylab = "Filtered Estimates", main = "Graph 2")
+```{r plot filtered estimates, out.height="200px"}
+par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.8)
+plot(dropFirst(NileFilt$m),ylab = "Filtered Estimates", main = "Graph 2: Filtered Estimates using V=15100, W=1470")
 ```
 
-i'm doing this because i don't know if there's any hidden function in this second method
-
-```{r re-estimating}
-mod <- dlmModPoly(1,dV=15100, dW=1470)
-outFilt<- dlmFilter(Nile,mod)
-names(outFilt)
-filterEstimates= window(outFilt$m,start=start(Nile)[1])
-```
-computing the variance 
-```{r variance comput,outwidth=0.9}
-n <- length(Nile)
-listC <- dlmSvd2var(outFilt$U.C, outFilt$D.C)
-sqrtC <- sqrt(unlist(listC))
-ts.plot(sqrtC[-1], ylab="standard deviation", main = "Graph 3")
+We can compute the variance as well. It is plotted as follows
+```{r variance compute,out.height="200px"}
+par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.8)
+varC <- unlist(dlmSvd2var(NileFilt$U.C, NileFilt$D.C))
+sdC <- sqrt(varC)
+ts.plot(sdC[-1], ylab="Standard Deviation", main = "Graph 3: Standard Deviation of the filtered estimates")
 ```
 
-As we can see from the graph above, the standard deviations of the filtering state reach their maximal values at the beginning of the time series, while sharply decreasing as time pass by. This reflect the fact that we have less information about the initial state of the system. As new observations arrive the filtering state estimates become more and more accurate, hence the decrease in the standard deviations over time. 
+As we can see from the graph above, the standard deviations of the filtering estimates decrease as time passes by, and converges to a value above 60. This might reflect the low guess of the standard deviation C0 (sqrt(1000) = 31) made at the beginning . As new observations arrive the standard deviation converges to the stable value. 
 
 We finally plot the whole data along with the filtered estimates with 95% confidence interval
 
@@ -103,8 +99,8 @@ We finally plot the whole data along with the filtered estimates with 95% confid
 par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.6)
 plot(Nile, main = "Graph 4: Data and Filtered Estimates with 95% CI", xlab = "Time", ylab= "Water flow in 10^8 cubic meters", type = "o")
 lines(dropFirst(NileFilt$m), col = "orange")
-lines(dropFirst(NileFilt$m + 1.96*sqrtC), col = "blue", lty = "dotdash")
-lines(dropFirst(NileFilt$m - 1.96*sqrtC), col = "blue", lty = "dotdash")
+lines(dropFirst(NileFilt$m + 1.96*sdC), col = "blue", lty = "dotdash")
+lines(dropFirst(NileFilt$m - 1.96*sdC), col = "blue", lty = "dotdash")
 legend("bottomleft", legend = c("data","filtered","CI"),
 col = c("black", "orange","blue"),
 lty = c("solid", "solid", "dotdash"),
@@ -112,9 +108,7 @@ pch = c(16, NA, NA))
 ```
 
 
-FORECASTING
-
-
+# Question 2 - One-step ahead forecasts
 
 
 ```{r compute sd for forecast}
@@ -122,7 +116,7 @@ varR <- unlist(dlmSvd2var(NileFilt$U.R,NileFilt$D.R))
 sdR <- sqrt(varR)
 ```
 
-
+Below is the plot for the one-step ahead forecast with 95% confidence intervals
 
 ```{r forecasting}
 par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.6)
@@ -139,21 +133,36 @@ col = c("black", "red","blue"),
 lty = c("solid", "solid", "dotdash"),
 pch = c(16, NA, NA))
 ```
-variances here are random numbers i've choosen. As i said i'm not very fond of this part of theory so if you have better guesses on what values may be of interest feel free to change them 
+
+# Question 3 - Signal to noise ratio
+
+
+The signal-to-noise ratio are an important factor which set the weight of the most recent data point for the filtered estimates, with a larger value putting more weight to the recent data-point.
+
+To test the effect of signal-to-noise ratio on our model we test the following models.
+\linebreak
+
+Model 1 (Signal-to-noise ratio = 0.097) -
+\begin{eqnarray*} 
+Y_t &= \theta_t + v_t \quad    & v_t \overset{i.i.d.}\sim N(0, 15100)\\
+\theta_t &= \theta_{t-1} + w_t \quad   & v_t \overset{i.i.d.}\sim N(0, 1470)
+\end{eqnarray*}
+
+Model 2 (Signal-to-noise ratio = 10.27)-
+\begin{eqnarray*} 
+Y_t &= \theta_t + v_t \quad    & v_t \overset{i.i.d.}\sim N(0, 1470)\\
+\theta_t &= \theta_{t-1} + w_t \quad   & v_t \overset{i.i.d.}\sim N(0, 15100)
+\end{eqnarray*}
 
 ```{r Playing with signal to noise ratio}
-mod1 <- dlmModPoly(order = 1, dV =100000 , dW =1300)
+mod1 <- dlmModPoly(order = 1, dV =15100 , dW =1470)
 outFilt1 <- dlmFilter(Nile,mod1)
-mod1$W/mod1$V
 
-```
-```{r Playing with signal to noise ratio again}
-mod2 <- dlmModPoly(order = 1, dV =15000 , dW =5000000)
+mod2 <- dlmModPoly(order = 1, dV =1470 , dW =15100)
 outFilt2 <- dlmFilter(Nile,mod2)
-mod2$W/mod2$V
 ```
 
-just the graph
+Plotting the filtered estimates of both the models we find
 ```{r signal to noise graph}
 par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.9)
 plot(Nile,type="o", xlab = "", ylab = "Level",col='black')
@@ -166,5 +175,8 @@ legend("bottomright", legend = leg,
 col=c("black", "red", "blue"),
 lty = c("solid", "longdash", "dotdash"),
 pch = c(1, NA, NA), bty = "n")
+
 ```
-We can see from the graph that when the increase W relative to V, the signal to noise ratio decreases and the uncertainty in the forecast increases. On the other hand, if V gets larger the signal gets larger relative to the noise and there is less uncertainty in the estimates
+\linebreak
+
+We can see from the graph that when we increase the signal to noise ratio (W/V) substantially, the filtered estimates follow the data more closely. This can be explained, because when we increase W/V we increase the weight on the most recent data point. In the plot, given we increase the ratio hundredfold the estimates almost match the most recent points.
