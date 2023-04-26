@@ -93,6 +93,7 @@ ts.plot(sdC[-1], ylab="Standard Deviation", main = "Graph 3: Standard Deviation 
 
 As we can see from the graph above, the standard deviations of the filtering estimates decrease as time passes by, and converges to a value above 60. This might reflect the low guess of the standard deviation C0 (sqrt(1000) = 31) made at the beginning . As new observations arrive the standard deviation converges to the stable value. 
 
+
 We finally plot the whole data along with the filtered estimates with 95% confidence interval
 
 ```{r final plot}
@@ -108,6 +109,7 @@ pch = c(16, NA, NA))
 ```
 
 
+
 # Question 2 - One-step ahead forecasts
 
 
@@ -118,12 +120,13 @@ sdR <- sqrt(varR)
 
 Below is the plot for the one-step ahead forecast with 95% confidence intervals
 
+
 ```{r forecasting}
 par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.6)
 a <- window(cbind(Nile, NileFilt$f),
 start = 1871, end = 1970)
 plot(a[, 1], type = 'o', col = "black",
-xlab = "", ylab = "Level")
+xlab = "", ylab = "Level",main = "Graph 5: One Step ahead Forecasts with 95% CI")
 lines(dropFirst(a[, 2]), lty = "solid", col='red')
 lines(dropFirst(a[, 2] + 1.96*sdR), lty = "dotdash", col='blue')
 lines(dropFirst(a[, 2] - 1.96*sdR), lty = "dotdash", col='blue')
@@ -133,6 +136,7 @@ col = c("black", "red","blue"),
 lty = c("solid", "solid", "dotdash"),
 pch = c(16, NA, NA))
 ```
+
 
 # Question 3 - Signal to noise ratio
 
@@ -154,6 +158,7 @@ Y_t &= \theta_t + v_t \quad    & v_t \overset{i.i.d.}\sim N(0, 1470)\\
 \theta_t &= \theta_{t-1} + w_t \quad   & v_t \overset{i.i.d.}\sim N(0, 15100)
 \end{eqnarray*}
 
+
 ```{r Playing with signal to noise ratio}
 mod1 <- dlmModPoly(order = 1, dV =15100 , dW =1470)
 outFilt1 <- dlmFilter(Nile,mod1)
@@ -162,10 +167,12 @@ mod2 <- dlmModPoly(order = 1, dV =1470 , dW =15100)
 outFilt2 <- dlmFilter(Nile,mod2)
 ```
 
+
 Plotting the filtered estimates of both the models we find
+
 ```{r signal to noise graph}
 par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.9)
-plot(Nile,type="o", xlab = "", ylab = "Level",col='black')
+plot(Nile,type="o", xlab = "", ylab = "Level",col='black', main = "Graph 6: Signal-to-noise")
 lines(dropFirst(outFilt1$m), lty = "longdash", col='red')
 lines(dropFirst(outFilt2$m), lty = "dotdash", col='blue')
 leg <- c("data", paste("filtered, W/V =",
@@ -177,6 +184,8 @@ lty = c("solid", "longdash", "dotdash"),
 pch = c(1, NA, NA), bty = "n")
 
 ```
+
 \linebreak
 
 We can see from the graph that when we increase the signal to noise ratio (W/V) substantially, the filtered estimates follow the data more closely. This can be explained, because when we increase W/V we increase the weight on the most recent data point. In the plot, given we increase the ratio hundredfold the estimates almost match the most recent points.
+
