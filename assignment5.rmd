@@ -8,7 +8,11 @@ subtitle: "Group 22\n \\vspace{1in}"
 
 ```{r setup, include=FALSE, echo=TRUE}
 knitr::opts_chunk$set(echo = FALSE, out.height = "75%", out.width = "75%")
-list.of.packages <- c("fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang","tseries","zoo")
+list.of.packages <- c("dlm", "fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang","tseries","zoo")
+if(!require(dlm)){
+    install.packages("dlm")
+    library(dlm)
+}
 if(!require(fpp2)){
     install.packages("fpp2")
     library(fpp2)
@@ -55,7 +59,14 @@ if(!require(rlang)){
 
 plot(Nile, main = "Graph 1: River Nile annual flow in 10^8 cubic meters (1871-1970)", xlab = "Time", ylab= "Water flow in 10^8 cubic meters")
 ```
-```{r}
+Let us consider the following random walk plus noise model to be applied to the Nile data:
+\begin{eqnarray*} 
+Y_t &= \theta_t + v_t \quad    & v_t \overset{i.i.d.}\sim N(0, V)\\
+\theta_t &= \theta_{t-1} + w_t \quad   & v_t \overset{i.i.d.}\sim N(0, W)
+\end{eqnarray*}
 
+We will set V = 15100 and W = 1470 and the initial distribution $\theta_0 \sim N(1000,1000)$ for our model
 
+```{r model}
+mod <- dlm(m0=1000, C0=1000, FF=1, V=15100, GG=1, W=1470)
 ```
