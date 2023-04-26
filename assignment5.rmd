@@ -69,4 +69,12 @@ We will set V = 15100 and W = 1470 and the initial distribution $\theta_0 \sim N
 
 ```{r model}
 mod <- dlm(m0=1000, C0=1000, FF=1, V=15100, GG=1, W=1470)
+NileFilt <- dlmFilter(Nile, mod)
 ```
+
+Plotting the filtered estimates we get
+
+```{r plot filtered estimates}
+plot(dropFirst(NileFilt$m),ylab = "Filtered Estimates")
+```
+
