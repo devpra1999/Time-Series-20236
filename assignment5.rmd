@@ -160,4 +160,4 @@ col=c("black", "red", "blue"),
 lty = c("solid", "longdash", "dotdash"),
 pch = c(1, NA, NA), bty = "n")
 ```
-We can see from the graph that when the increase W relative to V, the signal to noise ratio decreases and the uncertainty in the forecast increases. On the other hand, if V gets larger the signal gets larger relative to the noise and there is less uncertainty in the estimates
+We can see from the graph that when the increase W relative to V, the signal to noise ratio decreases and the uncertainty in the forecast increases. On the other hand, if V gets larger the signal gets larger relative to the noise and there is less uncertainty in the estimates.
