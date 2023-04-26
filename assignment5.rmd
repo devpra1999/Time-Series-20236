@@ -77,4 +77,70 @@ Plotting the filtered estimates we get
 ```{r plot filtered estimates}
 plot(dropFirst(NileFilt$m),ylab = "Filtered Estimates")
 ```
+i'm doing this because i don't know if there's any hidden function in this second method
+```{r re-estimating}
+mod <- dlmModPoly(1,dV=15100, dW=1470)
+outFilt<- dlmFilter(Nile,mod)
+names(outFilt)
+filterEstimates= window(outFilt$m,start=start(Nile)[1])
+```
+computing the variance 
+```{r variance comput,outwidth=0.9}
+n <- length(Nile)
+listC <- dlmSvd2var(outFilt$U.C, outFilt$D.C)
+sqrtC <- sqrt(unlist(listC))
+ts.plot(sqrtC[-1], ylab="standard deviation")
 
+```
+FORECASTING
+
+i've made a few graph honestly i prefer the second one , in the final version you can delete the first 
+```{r forecast first graph}
+
+plot(window(Nile, start=1871), type="o", ylab="level", cex=.3)
+lines(window(outFilt$f, start=1871), type="o", col='orange', cex=.3)
+
+```
+
+also here dropping the first observation would not be a bad idea i post the command here below:
+lines(dropFirst(outFilt$m), lty = "longdash", col='darkorange') instead of lines
+
+```{r forecasting}
+par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.6)
+a <- window(cbind(Nile, outFilt$f),
+start = 1871, end = 1970)
+plot(a[, 1], type = 'o', col = "black",
+xlab = "", ylab = "Level")
+lines(a[, 2], lty = "longdash", col='red')
+leg <- c("data", paste("one-step-ahead forecast, W/V =0.097"))
+legend("bottomleft", legend = leg,
+col = c("black", "red"),
+lty = c("solid", "longdash", "dotdash"),
+pch = c(1, NA, NA), bty = "n")
+```
+variances here are random numbers i've choosen. As i said i'm not very fond of this part of theory so if you have better guesses on what values may be of interest feel free to change them 
+```{r Playing with signal to noise ratio}
+mod1 <- dlmModPoly(order = 1, dV =14000 , dW =1300)
+outFilt1 <- dlmFilter(Nile,mod1)
+mod1$W/mod1$V
+
+```
+```{r Playing with signal to noise ratio again}
+mod2 <- dlmModPoly(order = 1, dV =15000 , dW =500)
+outFilt2 <- dlmFilter(Nile,mod2)
+mod2$W/mod2$V
+```
+just the graph
+```{r signal to noise graph}
+par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.9)
+plot(Nile,type="o", xlab = "", ylab = "Level",col='black')
+lines(dropFirst(outFilt1$m), lty = "longdash", col='red')
+lines(dropFirst(outFilt2$m), lty = "dotdash", col='blue')
+leg <- c("data", paste("filtered, W/V =",
+format(c(W(mod1) / V(mod1),
+W(mod2) / V(mod2)))))
+legend("bottomright", legend = leg,
+col=c("black", "red", "blue"),
+lty = c("solid", "longdash", "dotdash"),
+pch = c(1, NA, NA), bty = "n")
+```
