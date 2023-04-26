@@ -76,7 +76,7 @@ NileFilt <- dlmFilter(Nile, mod)
 Plotting the filtered estimates we get
 
 ```{r plot filtered estimates}
-plot(dropFirst(NileFilt$m),ylab = "Filtered Estimates")
+plot(dropFirst(NileFilt$m),ylab = "Filtered Estimates", main = "Graph 2")
 ```
 
 i'm doing this because i don't know if there's any hidden function in this second method
@@ -92,38 +92,52 @@ computing the variance
 n <- length(Nile)
 listC <- dlmSvd2var(outFilt$U.C, outFilt$D.C)
 sqrtC <- sqrt(unlist(listC))
-ts.plot(sqrtC[-1], ylab="standard deviation")
+ts.plot(sqrtC[-1], ylab="standard deviation", main = "Graph 3")
 ```
 
 As we can see from the graph above, the standard deviations of the filtering state reach their maximal values at the beginning of the time series, while sharply decreasing as time pass by. This reflect the fact that we have less information about the initial state of the system. As new observations arrive the filtering state estimates become more and more accurate, hence the decrease in the standard deviations over time. 
 
+We finally plot the whole data along with the filtered estimates with 95% confidence interval
+
+```{r final plot}
+par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.6)
+plot(Nile, main = "Graph 4: Data and Filtered Estimates with 95% CI", xlab = "Time", ylab= "Water flow in 10^8 cubic meters", type = "o")
+lines(dropFirst(NileFilt$m), col = "orange")
+lines(dropFirst(NileFilt$m + 1.96*sqrtC), col = "blue", lty = "dotdash")
+lines(dropFirst(NileFilt$m - 1.96*sqrtC), col = "blue", lty = "dotdash")
+legend("bottomleft", legend = c("data","filtered","CI"),
+col = c("black", "orange","blue"),
+lty = c("solid", "solid", "dotdash"),
+pch = c(16, NA, NA))
+```
+
 
 FORECASTING
 
-i've made a few graph honestly i prefer the second one , in the final version you can delete the first
 
-```{r forecast first graph}
 
-plot(window(Nile, start=1871), type="o", ylab="level", cex=.3)
-lines(window(outFilt$f, start=1871), type="o", col='orange', cex=.3)
 
+```{r compute sd for forecast}
+varR <- unlist(dlmSvd2var(NileFilt$U.R,NileFilt$D.R))
+sdR <- sqrt(varR)
 ```
 
-also here dropping the first observation would not be a bad idea i post the command here below:
-lines(dropFirst(outFilt$m), lty = "longdash", col='darkorange') instead of lines
+
 
 ```{r forecasting}
 par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.6)
-a <- window(cbind(Nile, outFilt$f),
+a <- window(cbind(Nile, NileFilt$f),
 start = 1871, end = 1970)
 plot(a[, 1], type = 'o', col = "black",
 xlab = "", ylab = "Level")
-lines(a[, 2], lty = "longdash", col='red')
-leg <- c("data", paste("one-step-ahead forecast, W/V =0.097"))
+lines(dropFirst(a[, 2]), lty = "solid", col='red')
+lines(dropFirst(a[, 2] + 1.96*sdR), lty = "dotdash", col='blue')
+lines(dropFirst(a[, 2] - 1.96*sdR), lty = "dotdash", col='blue')
+leg <- c("data", "One-step-Ahead Forecast","CI")
 legend("bottomleft", legend = leg,
-col = c("black", "red"),
-lty = c("solid", "longdash", "dotdash"),
-pch = c(1, NA, NA), bty = "n")
+col = c("black", "red","blue"),
+lty = c("solid", "solid", "dotdash"),
+pch = c(16, NA, NA))
 ```
 variances here are random numbers i've choosen. As i said i'm not very fond of this part of theory so if you have better guesses on what values may be of interest feel free to change them 
 
