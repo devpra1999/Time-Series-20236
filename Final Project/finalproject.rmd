@@ -202,8 +202,6 @@ plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "PREDICTED STATE",xlab
 For our analysis we decided to use stations 55, 92, 97 and 41.
 
 
-
-
 ```{r setting up time series}
 
 st97datset <- subset(airdataset, station_id == 97)
@@ -248,4 +246,34 @@ plot(log_ts55_avg, main = "Graph 9: 12 hour moving average pm25 levels at statio
 plot(log_ts92_avg, main = "Graph 10: 12 hour moving average pm25 levels at station 92, 2020", xlab = "Time", ylab= "Pm25 level (log of)")
 
 plot(log_ts97_avg, main = "Graph 11: 12 hour moving average pm25 levels at station 97, 2020", xlab = "Time", ylab= "Pm25 level (log of)")
+```
+
+#Model specification
+
+```{r}
+#Number of stations
+m=4
+#Number of states
+p=3
+
+#Function for calculating distance
+distance <- function(s_id_1,s_id_2){
+  la1 <- 0
+  lo1 <- 0
+  la2 <- 0
+  lo2 <- 0
+  sqrt(sum((c(la1,lo1) - c(la2,lo2))^2))
+}
+
+#Model specification
+build <- function(parm){
+  dlmModPoly(order = p,
+             dV = diag(parm[1:p]),
+             dW = parm[p+1] * exp(-parm[p+2]*distance(s1,s2))
+  )
+}
+
+#MLE
+fit <- dlmMLE()
+
 ```
