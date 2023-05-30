@@ -122,7 +122,7 @@ xmax = max(st55datset$Time)
 ymax = max(st55datset$pm25)
 
 p <- ggplot(data=st55datset, aes(x=Time, y=pm25)) +
-  ggtitle("PM2.5 levels at Station #55") +
+  ggtitle("Graph 5: PM2.5 levels at Station #55") +
   geom_rect(aes(xmin=xmin, xmax=xmax, ymin=25, ymax=ymax), fill=adjustcolor("pink",alpha.f=0.9), alpha=.2) +
   geom_line() +
   annotate(geom="text", x=as.POSIXct("2020-06-18"), y=200, label="Dangerous PM2.5 level", color="darkred") +
@@ -139,7 +139,7 @@ Majority of measurements from June to mid-August are smaller than the prescribed
 ### Time should be fixed and the average(?) of wind taken into account
 
  windy <- ggplot(data=st55datset, aes(x=Time, y=wind)) +
-   ggtitle("Wind strength") +
+   ggtitle("Graph 6: Wind strength") +
    geom_line() + 
    scale_y_continuous(expand=c(0,0)) +
 #   scale_x_date(limit=c(as.Date("2020-06-01"),as.Date("2020-09-30")))+
@@ -193,7 +193,7 @@ estStates <- posterior(fmodel)
 ```
 
 ```{r, out.width='100%'}
-plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "PREDICTED STATE",xlab="TIME",  cex=.3, type="s")
+plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "PREDICTED STATE",xlab="TIME",  cex=.3, type="s", main="Graph 7: State predictions")
 
 ```
 
@@ -235,6 +235,16 @@ log_ts41_zoo <- as.zoo(log_ts41)
 log_ts41_avg <- rollmean(log_ts41_zoo, k = 12, fill = NA)
 ```
 
-```{r }
+```{r, plots}
 
+par(mfrow = c(2, 2))
+
+
+plot(log_ts41_avg, main = "Graph 8: 12 hour moving average pm25 levels at station 41, 2020", xlab = "Time", ylab= "Pm25 level (log of)")
+
+plot(log_ts55_avg, main = "Graph 9: 12 hour moving average pm25 levels at station 55, 2020", xlab = "Time", ylab= "Pm25 level (log of)")
+
+plot(log_ts92_avg, main = "Graph 10: 12 hour moving average pm25 levels at station 92, 2020", xlab = "Time", ylab= "Pm25 level (log of)")
+
+plot(log_ts97_avg, main = "Graph 11: 12 hour moving average pm25 levels at station 97, 2020", xlab = "Time", ylab= "Pm25 level (log of)")
 ```
