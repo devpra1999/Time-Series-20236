@@ -235,9 +235,10 @@ log_ts41_zoo <- as.zoo(log_ts41)
 log_ts41_avg <- rollmean(log_ts41_zoo, k = 12, fill = NA)
 ```
 
-```{r, plots}
+```{r, fig.width=100, fig.height=80 }
 
 par(mfrow = c(2, 2))
+par(cex.main = 10, cex.lab = 10, cex.axis = 10)
 
 
 plot(log_ts41_avg, main = "Graph 8: 12 hour moving average pm25 levels at station 41, 2020", xlab = "Time", ylab= "Pm25 level (log of)")
