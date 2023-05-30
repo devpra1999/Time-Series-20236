@@ -9,7 +9,7 @@ subtitle: "Group 22\n \\vspace{1in}"
 \newpage
 ```{r setup, include=FALSE, echo=TRUE}
 knitr::opts_chunk$set(echo = FALSE, out.height = "75%", out.width = "75%")
-list.of.packages <- c("dlm", "fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang","tseries","zoo")
+list.of.packages <- c("dlm", "fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang","tseries","zoo", "xts")
 if(!require(dlm)){
     install.packages("dlm")
     library(dlm)
@@ -53,6 +53,10 @@ if(!require(rlang)){
   if(!require(zoo)){
     install.packages("zoo")
     library(zoo)
+  }
+if(!require(xts)){
+    install.packages("xts")
+    library(xts)
 }
 ```
 
@@ -194,3 +198,43 @@ plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "PREDICTED STATE",xlab
 ```
 
 # Question 2 
+
+For our analysis we decided to use stations 55, 92, 97 and 41.
+
+
+
+
+```{r setting up time series}
+
+st97datset <- subset(airdataset, station_id == 97)
+st97datset$Time <- as.POSIXct(st97datset$datetime, format = "%Y-%m-%dT%H:%M:%SZ")
+ts97 <- xts(st97datset$pm25, order.by = st97datset$Time)
+log_ts97 <- log(ts97)
+log_ts97_zoo <- as.zoo(log_ts97)
+log_ts97_avg <- rollmean(log_ts97_zoo, k = 12, fill = NA)
+
+st55datset <- subset(airdataset, station_id == 55)
+st55datset$Time <- as.POSIXct(st55datset$datetime, format = "%Y-%m-%dT%H:%M:%SZ")
+ts55 <- xts(st55datset$pm25, order.by = st55datset$Time)
+log_ts55 <- log(ts55)
+log_ts55_zoo <- as.zoo(log_ts55)
+log_ts55_avg <- rollmean(log_ts55_zoo, k = 12, fill = NA)
+
+st92datset <- subset(airdataset, station_id == 92)
+st92datset$Time <- as.POSIXct(st92datset$datetime, format = "%Y-%m-%dT%H:%M:%SZ")
+ts92 <- xts(st92datset$pm25, order.by = st92datset$Time)
+log_ts92 <- log(ts92)
+log_ts92_zoo <- as.zoo(log_ts92)
+log_ts92_avg <- rollmean(log_ts92_zoo, k = 12, fill = NA)
+
+st41datset <- subset(airdataset, station_id == 41)
+st41datset$Time <- as.POSIXct(st41datset$datetime, format = "%Y-%m-%dT%H:%M:%SZ")
+ts41 <- xts(st41datset$pm25, order.by = st41datset$Time)
+log_ts41 <- log(ts41)
+log_ts41_zoo <- as.zoo(log_ts41)
+log_ts41_avg <- rollmean(log_ts41_zoo, k = 12, fill = NA)
+```
+
+```{r }
+
+```
