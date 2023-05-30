@@ -57,3 +57,140 @@ if(!require(rlang)){
 ```
 
 
+\newpage
+
+# Question 1
+
+We have chosen Station 55 for our analysis.
+
+We will first present some time series plots to understand the data observed. After that we will fit a Gaussian HMM model and use it to interpret the first question of interest. 
+
+# Data Visualization
+```{r loading dataset, warning=FALSE, message= FALSE}
+airdataset=read.csv("https://raw.githubusercontent.com/devpra1999/Time-Series-20236/main/ts_epa_2020_west_sept_fill.csv",header = TRUE)
+attach(airdataset)
+st55datset= subset(airdataset,station_id==55)
+st55datset$Time <- as.POSIXct(st55datset$datetime, format = "%Y-%m-%dT%H:%M:%SZ")
+## had some troubles with Time, the previous one with T%hh resulted in NA values, had to get rid of hours, but maybe there's a better solution 
+attach(st55datset)
+```
+
+```{r time series pm25}
+pm25ts <- zoo(st55datset$pm25, st55datset$datetime)
+daily_avg_pm25 <- aggregate(pm25ts, as.Date(index(pm25ts)), mean)
+daily_avg_ma_pm25 <- rollmean(daily_avg_pm25, k = 24, fill = NA)
+plot(daily_avg_ma_pm25,main = "Graph 1: Average PM25 levels at station 55, 2020", xlab = "Time", ylab= "Average PM25 level per day")
+
+```
+
+Moving average dramatically increases in the beginning of August from around 17 to its peak in the beginning of September at around 60 in its PM25 levels. The values slightly decrease in September.
+
+```{r ts temp}
+tempts <- zoo(st55datset$temp, st55datset$datetime)
+daily_avg_t <- aggregate(tempts, as.Date(index(tempts)), mean)
+daily_avg_ma_t <- rollmean(daily_avg_t, k = 24, fill = NA)
+plot(daily_avg_ma_t, main = "Graph 2: Average Daily Temperature (C°) at station 55, 2020", xlab = "Time", ylab= "Average Daily Temperature (C°)")
+```
+
+The temperature has been increasing from June's values of 24 degrees Celsius to its peak in August at around 28.
+
+```{r ts wind}
+windts <- zoo(st55datset$wind, st55datset$datetime)
+daily_avg_w <- aggregate(windts, as.Date(index(windts)), mean)
+daily_avg_ma_w <- rollmean(daily_avg_w, k = 24, fill = NA)
+plot(daily_avg_ma_w, main = "Graph 3: Average Wind Speed (knots/second) at station 55, 2020", xlab = "Time", ylab= "Average Wind Speed (knots/second)")
+```
+
+Average wind level has been stable at around 14m/s in the summer and started to decrease in the second part of August to around 12 in mid-September.
+
+```{r compare}
+plot(scale(daily_avg_ma_pm25), col = "darkgreen", main = "Graph 4: Scaled development of PM25, temperature and wind, 2020", cex.main=0.9,xlab = "Time", ylab= "Scaled index")
+lines(scale(daily_avg_ma_w), col = "blue")
+lines(scale(daily_avg_ma_t), col = "red")
+legend("bottomleft", legend = c("PM25","Wind", "Temp"), col = c("darkgreen","blue","red"), lty = c(1,1,1), cex = 0.5)
+```
+
+High average temperature in August and comparatively strong winds seem to have a correlation with fires, which have increased the values of PM25 particles in the air. There is around 10 day lag between the temperature increases and PM25 value increase in August.
+
+```{r PM25 levels}
+xmin = min(st55datset$Time)
+xmax = max(st55datset$Time)
+ymax = max(st55datset$pm25)
+
+p <- ggplot(data=st55datset, aes(x=Time, y=pm25)) +
+  ggtitle("PM2.5 levels at Station #55") +
+  geom_rect(aes(xmin=xmin, xmax=xmax, ymin=25, ymax=ymax), fill=adjustcolor("pink",alpha.f=0.9), alpha=.2) +
+  geom_line() +
+  annotate(geom="text", x=as.POSIXct("2020-06-18"), y=200, label="Dangerous PM2.5 level", color="darkred") +
+  geom_hline(yintercept=25, color="darkred") + 
+  scale_y_continuous(expand=c(0,0)) +
+#  scale_x_date(limit=c(as.POSIXct("2020-06-01 00:00:00"),as.POSIXct("2020-09-30 23:00:00")))+
+  labs(x=NULL, y=NULL)
+p
+```
+
+Majority of measurements from June to mid-August are smaller than the prescribed limit with the exception of a peak of an outlying 307.81 in July. However, since then until October, the dynamic has changed with only a few days where the values staying within the limit constraints below 25. The peaks are high, probably resulted from fires, high temperatures and strong wind.
+
+```{r wind levels}
+### Time should be fixed and the average(?) of wind taken into account
+
+ windy <- ggplot(data=st55datset, aes(x=Time, y=wind)) +
+   ggtitle("Wind strength") +
+   geom_line() + 
+   scale_y_continuous(expand=c(0,0)) +
+#   scale_x_date(limit=c(as.Date("2020-06-01"),as.Date("2020-09-30")))+
+   labs(x=NULL, y=NULL)
+ windy
+```
+
+# Gaussian HMM Model
+First, we set up our model. The initial probabilities and the transition matrix are just made by default values. Since, there are 3 states, they will have 1/3 probability each.
+
+```{r model}
+set.seed(2)
+y=as.numeric(st55datset$pm25)
+model = depmix(y~ 1, data=data.frame(y), nstates=3)
+cat('\n') 
+model
+```
+
+The results of the estimation of both the initial probabilities and the transition matrix are indicated below.
+
+```{r MLE, echo=TRUE}
+fmodel <- fit(model)
+summary(fmodel)
+```
+
+
+Firstly, we can identify the three states that we wanted to study. State 1 is the one relative to low pollution, state 3 is relative to high pollution levels and state 2 is the one that we can associate to a medium pollution levels. Looking at the transition matrix we note that there are steps that are never possible, state 3 to 1 and vice versa.
+
+Further, the states are very persistent, and probability of state transition by a single step is very low, and by two steps virtually zero. Thus, the current state is a very good predictor of the state in the next hour.
+
+If the current state is of low pollution, there is not much need to enforce any strict measures, with an extremely high probability (0.993) of staying the same low pollution state.
+
+If the current state is of medium pollution, there is a need to enforce strict measures for some time, given the large probability of staying in the medium state (0.95), and also a possibility of transitioning to high pollution state in the next hour(0.026).
+
+Finally, if the pollution is high prolonged strict measures should be anticipated to bring it down medium pollution and finally to low pollution (prolonged because) both high and medium pollution states being highly persistent.
+
+The following table gives the expected number of hours for pollution state to move from i to j (where i and j are different).
+
+```{r future hours}
+tpm <- getpars(fmodel)[4:12]
+mcpm25 <- new("markovchain", states = c("low","medium","high"), transitionMatrix = matrix(data=tpm, byrow=TRUE, nrow=3), name="PM25")
+meanFirstPassageTime(mcpm25)
+```
+
+Thus we can see that if the current state is of high pollution, it'll take an expected time of 92 hours for the pollution to reach the low pollution state and 23 hours to reach the medium pollution state. Again given the persistence of each state, the first passage time is a good metric for predicting outcomes over the next hours.
+
+Finally, below is the prediction of the states, given the data observed.
+
+```{r,comment="",warning=FALSE}
+estStates <- posterior(fmodel)
+```
+
+```{r, out.width='100%'}
+plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "PREDICTED STATE",xlab="TIME",  cex=.3, type="s")
+
+```
+
+# Question 2
