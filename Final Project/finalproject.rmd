@@ -193,7 +193,7 @@ estStates <- posterior(fmodel)
 ```
 
 ```{r, out.width='100%'}
-plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "PREDICTED STATE",xlab="TIME",  cex=.3, type="s", main="Graph 7: State predictions")
+plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "Predicted State" ,  cex=.3, type="s", main="Graph 7: State predictions")
 
 ```
 
@@ -239,13 +239,13 @@ par(mfrow = c(2, 2))
 par(cex.main = 1, cex.lab = 1, cex.axis = 1)
 
 
-plot(log_ts41_avg, main = "Graph 8: pm25 levels at station 41", xlab = "Time", ylab= "Pm25 level (log of)")
+plot(log_ts41_avg, main = "Graph 8: pm25 levels at station 41",  ylab= "Pm25 level (log of)")
 
-plot(log_ts55_avg, main = "Graph 9: pm25 levels at station 55", xlab = "Time", ylab= "Pm25 level (log of)")
+plot(log_ts55_avg, main = "Graph 9: pm25 levels at station 55" , ylab= "Pm25 level (log of)")
 
-plot(log_ts92_avg, main = "Graph 10: pm25 levels at station 92", xlab = "Time", ylab= "Pm25 level (log of)")
+plot(log_ts92_avg, main = "Graph 10: pm25 levels at station 92" , ylab= "Pm25 level (log of)")
 
-plot(log_ts97_avg, main = "Graph 11: pm25 levels at station 97", xlab = "Time", ylab= "Pm25 level (log of)")
+plot(log_ts97_avg, main = "Graph 11: pm25 levels at station 97", ylab= "Pm25 level (log of)")
 ```
 
 #Model specification
