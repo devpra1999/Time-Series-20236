@@ -203,6 +203,7 @@ For our analysis we decided to use stations 55, 92, 97 and 41.
 
 
 ```{r setting up time series}
+# setting up the time series for each station 
 
 st97datset <- subset(airdataset, station_id == 97)
 st97datset$Time <- as.POSIXct(st97datset$datetime, format = "%Y-%m-%dT%H:%M:%SZ")
@@ -233,23 +234,37 @@ log_ts41_zoo <- as.zoo(log_ts41)
 log_ts41_avg <- rollmean(log_ts41_zoo, k = 12, fill = NA)
 ```
 
-```{r, }
+```{r, fig.align = "center"}
+#Setting up graph 8
 
 plot(log_ts55_avg, col = "red", main = "Graph 8: pm25 levels at station 41 and 55", cex.main=0.9,xlab = "Time", ylab= "Pm25 level (log of)")
 lines(log_ts41_avg, col = "black")
 legend("topleft", legend = c("Station 41","Station 55", "station 97"), col = c("black","red"), lty = c(1,1), cex = 0.5)
+```
 
+
+```{r, fig.align = "center"}
+
+#Setting up graph 9
 
 plot(log_ts92_avg, col = "red", main = "Graph 9: pm25 levels at station 92 and 97", cex.main=0.9,xlab = "Time", ylab= "Pm25 level (log of)")
 lines(log_ts97_avg, col = "black")
 legend("topleft", legend = c("Station 97","Station 92", "Station 41"), col = c("black","red"), lty = c(1,1), cex = 0.5)
+```
+
+
+```{r, fig.align = "center"}
+
+#Setting up graph 10
 
 plot(log_ts41_avg, col = "black", main = "Graph 10: pm25 levels at station 92 and 41", cex.main=0.9,xlab = "Time", ylab= "Pm25 level (log of)")
 lines(log_ts92_avg, col = "red")
 legend("topleft", legend = c("Station 41","Station 92"), col = c("black","red"), lty = c(1,1), cex = 0.5)
 ```
 
-#Model specification
+In case of spatial dependence we expect the graphs of the closer stations to be more aligned compared to the ones which are more distant. Stations 55 and 41 are the closest one (only 100km apart) and we can see from Graph 8 that their measurement of pm25 almost coincide, supporting the spatial dependency hypothesis. Stations 92 and 97 are almost 300 km apart, and we can see from Graph  9 that their overlap is lower compared to the previous figure. This is even more clear if we look at Graph 10. Stations 41 and 92 are the furthest apart (650 km) and we can see that their observations are the less synchronized, especially in the Autumn months. Thus we can affirm from this rough first analysis that there is the case for a phenomenon of spatial dependence. 
+
+# Model specification
 
 ```{r}
 #Number of stations
