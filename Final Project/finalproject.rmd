@@ -233,19 +233,20 @@ log_ts41_zoo <- as.zoo(log_ts41)
 log_ts41_avg <- rollmean(log_ts41_zoo, k = 12, fill = NA)
 ```
 
-```{r,out.width="100%", fig.height=7 }
+```{r, }
 
-par(mfrow = c(2, 2))
-par(cex.main = 1, cex.lab = 1, cex.axis = 1)
+plot(log_ts55_avg, col = "red", main = "Graph 8: pm25 levels at station 41 and 55", cex.main=0.9,xlab = "Time", ylab= "Pm25 level (log of)")
+lines(log_ts41_avg, col = "black")
+legend("topleft", legend = c("Station 41","Station 55", "station 97"), col = c("black","red"), lty = c(1,1), cex = 0.5)
 
 
-plot(log_ts41_avg, main = "Graph 8: pm25 levels at station 41",  ylab= "Pm25 level (log of)")
+plot(log_ts92_avg, col = "red", main = "Graph 9: pm25 levels at station 92 and 97", cex.main=0.9,xlab = "Time", ylab= "Pm25 level (log of)")
+lines(log_ts97_avg, col = "black")
+legend("topleft", legend = c("Station 97","Station 92", "Station 41"), col = c("black","red"), lty = c(1,1), cex = 0.5)
 
-plot(log_ts55_avg, main = "Graph 9: pm25 levels at station 55" , ylab= "Pm25 level (log of)")
-
-plot(log_ts92_avg, main = "Graph 10: pm25 levels at station 92" , ylab= "Pm25 level (log of)")
-
-plot(log_ts97_avg, main = "Graph 11: pm25 levels at station 97", ylab= "Pm25 level (log of)")
+plot(log_ts41_avg, col = "black", main = "Graph 10: pm25 levels at station 92 and 41", cex.main=0.9,xlab = "Time", ylab= "Pm25 level (log of)")
+lines(log_ts92_avg, col = "red")
+legend("topleft", legend = c("Station 41","Station 92"), col = c("black","red"), lty = c(1,1), cex = 0.5)
 ```
 
 #Model specification
@@ -274,6 +275,9 @@ build <- function(parm){
 }
 
 #MLE
-fit <- dlmMLE()
+
 
 ```
+
+
+
