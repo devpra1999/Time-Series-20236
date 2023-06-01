@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = FALSE, out.height = "75%", out.width = "75%", fig.a
 
 #Downloading packages
 
-list.of.packages <- c("dlm", "fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang","tseries","zoo", "xts")
+list.of.packages <- c("dlm", "fpp2", "forecast","ggplot2","depmixS4","tidyverse","dplyr","rlang","tseries","zoo", "xts", "knitr")
 if(!require(dlm)){
     install.packages("dlm")
     library(dlm)
@@ -62,6 +62,10 @@ if(!require(rlang)){
 if(!require(xts)){
     install.packages("xts")
     library(xts)
+}
+if(!require(knitr)){
+    install.packages("knitr")
+    library(knitr)
 }
 ```
 
@@ -188,7 +192,12 @@ The results of the estimation of both the initial probabilities and the transiti
 #Estimation of initial probabilities and transition matrix 
 
 fmodel <- fit(model)
-summary(fmodel)
+output_table <- summary(fmodel)
+
+# Display the table using kable
+kable(output_table, format = "markdown")
+
+
 ```
 
 
@@ -307,7 +316,8 @@ $$
 distance_{i,j} = \sqrt{{(long_{i}-long_{j} )^2 + (lat_{i}-lat_{j})^2}}
 $$
 
-```{r}
+
+```{r,include=FALSE}
 #Combine datasets
 df <- as.ts(merge.zoo(log_ts41_avg,log_ts55_avg,log_ts92_zoo,log_ts97_avg))
 
