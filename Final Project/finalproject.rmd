@@ -302,7 +302,14 @@ In case of spatial dependence we expect the graphs of the closer stations to be 
 # Model specification
 
 ```{r}
-#Setting up the model 
+#Combine datasets
+df <- merge.zoo(log_ts41_avg,log_ts55_avg,log_ts92_zoo,log_ts97_avg)
+
+#Location of stations
+s41 <- c(37.79339,-121.2479)
+s55 <- c(37.28185,-120.4337)
+s92 <- c(33.71969,-116.1897)
+s97 <- c(36.16976,-115.263)
 
 #Number of stations
 m=4
@@ -310,16 +317,12 @@ m=4
 p=3
 
 #Function for calculating distance
-distance <- function(s_id_1,s_id_2){
-  la1 <- 0
-  lo1 <- 0
-  la2 <- 0
-  lo2 <- 0
-  sqrt(sum((c(la1,lo1) - c(la2,lo2))^2))
+distance <- function(s1,s2){
+  sqrt(sum(s1 - s2)^2)
 }
 
 #Model specification
-build <- function(parm){
+build <- function(parm,s1,s2){
   dlmModPoly(order = p,
              dV = diag(parm[1:p]),
              dW = parm[p+1] * exp(-parm[p+2]*distance(s1,s2))
@@ -327,7 +330,8 @@ build <- function(parm){
 }
 
 #MLE
-
+k <- p+2 #Number of parameters
+fit <- dlmMLE(df,rep(0.2,k),build, lower = rep(1e-6,k),s1 = s41, s2 = s52)
 
 ```
 
