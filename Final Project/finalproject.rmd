@@ -361,6 +361,14 @@ for (i in 1:m){
   }
 }
 
+$$
+\begin{cases}
+\begin{aligned}
+Y_t &= F \theta_t + v_t \quad & v_t  \overset{indep}\sim N_m(\textbf{0}, V) \\
+\theta_t &= G \theta_t + w_t, \quad & w_t \overset{indep}\sim N_p(\textbf{0}, W) 
+\end{aligned}
+\end{cases}
+$$
 
 #Model specification
 build <- function(parm){
