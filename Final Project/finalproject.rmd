@@ -190,6 +190,7 @@ State & 1 & 2 & 3 \\
 \hline
 Probability & $\pi_1$ & $\pi_2$ & $\pi_3$
 \end{tabular}
+\begin{equation*}
 \begin{pmatrix}
 p_0(1) = \frac{1}{3}\\
 
@@ -197,6 +198,7 @@ p_0(2) = \frac{1}{3} \\
 
 p_0(3) = \frac{1}{3}
 \end{pmatrix}
+\end{equation*}
 \]
 ```{r model}
 #Computing initial probabilities and transition matrix 
@@ -389,7 +391,6 @@ Y_t &= F \theta_t + v_t \quad & v_t  \overset{indep}\sim N_m(\textbf{0}, V) \\
 \end{aligned}
 \end{cases}
 $$
-```
 ```{r}
 #Model specification
 build <- function(parm){
@@ -437,7 +438,5 @@ knitr::kable(table_data, col.names = c("Label","Station41","Station55","Station9
 ```
 
 Clearly, the values for State 2 Expected Value and one-step-ahead prediction are the same, as it seems that for all stations, the value of PM2.5 is expected to be high. 
-
-
 
 
