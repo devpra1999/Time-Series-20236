@@ -360,7 +360,7 @@ for (i in 1:m){
     D[i,j] <- distance(s1 = list_st[[i]], s2 = list_st[[j]])
   }
 }
-
+```
 $$
 \begin{cases}
 \begin{aligned}
@@ -369,7 +369,8 @@ Y_t &= F \theta_t + v_t \quad & v_t  \overset{indep}\sim N_m(\textbf{0}, V) \\
 \end{aligned}
 \end{cases}
 $$
-
+```
+```{r}
 #Model specification
 build <- function(parm){
   #p=2,m=4
