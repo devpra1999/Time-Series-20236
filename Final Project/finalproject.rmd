@@ -303,17 +303,62 @@ In case of spatial dependence we expect the graphs of the closer stations to be 
 
 To set up a model that accounts for the spatial dependency we first need a formula to calculate the distance between stations. We decided to use the geometrical based on the coordinates of the stations.
 
-
-
-$
-
+$$
 distance_{i,j} = \sqrt{{(long_{i}-long_{j} )^2 + (lat_{i}-lat_{j})^2}}
+$$
+```{r}
+#Combine datasets
+df <- as.ts(merge.zoo(log_ts41_avg,log_ts55_avg,log_ts92_zoo,log_ts97_avg))
 
-$
+#Location of stations
+s41 <- c(37.79339,-121.2479)
+s55 <- c(37.28185,-120.4337)
+s92 <- c(33.71969,-116.1897)
+s97 <- c(36.16976,-115.263)
+list_st <- list(s41,s55,s92,s97)
+
+#Number of stations
+m=4
+#Number of states
+p=2
+
+#Function for calculating distance
+distance <- function(s1,s2){
+  sqrt(sum(s1 - s2)^2)
+}
+
+#Make matrix of distances
+D = matrix(nrow = m,ncol = m)
+for (i in 1:m){
+  for (j in 1:m){
+    D[i,j] <- distance(s1 = list_st[[i]], s2 = list_st[[j]])
+  }
+}
 
 
+#Model specification
+build <- function(parm){
+  #p=2,m=4
+  mod <- dlmModPoly(order = p)
+  mod$FF <- mod$FF %x% diag(m)
+  mod$GG <- mod$GG %x% diag(m)
+  mod$V = diag(parm[1:m])
+  W1 <- parm[m+1] * exp(-parm[m+2]*D)
+  W2 <- parm[m+3] * exp(-parm[m+4]*D)
+  #W3 <- parm[m+5] * exp(-parm[m+6]*D)
+  mod$W <- bdiag(W1, W2)
+  mod$m0 <- rep(0, m*p)
+  mod$C0 <- diag(m*p)*1e-5
+  return(mod)
+}
 
-
+#MLE
+k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
+fit <- dlmMLE(df,rep(0.2,k),build,lower = rep(1e-6,k))
+fit$convergence
+fit$par
+unlist(build(fit$par)[c("V", "W")])
+```
 
 
 
