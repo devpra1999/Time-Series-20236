@@ -1,9 +1,9 @@
 ---
-title: "Final Project\n \\vspace{1in}"
+title: "Final Project\n"
 output: pdf_document
-date: "May 2023 \\vspace{1in}"
-author: "Imanbayeva Sofya, Mazzi Lapo, Piras Mattia, Srivastava Dev\n \\vspace{1in}"
-subtitle: "Group 22\n \\vspace{1in}"
+date: "May 2023\n"
+author: "Imanbayeva Sofya, Mazzi Lapo, Piras Mattia, Srivastava Dev\n"
+subtitle: "Group 22\n "
 ---
 
 \newpage
@@ -96,7 +96,7 @@ attach(st55datset)
 pm25ts <- zoo(st55datset$pm25, st55datset$datetime)
 daily_avg_pm25 <- aggregate(pm25ts, as.Date(index(pm25ts)), mean)
 daily_avg_ma_pm25 <- rollmean(daily_avg_pm25, k = 24, fill = NA)
-plot(daily_avg_ma_pm25,main = "Graph 1: Average PM25 levels at station 55, 2020", xlab = "Time", ylab= "Average PM25 level per day")
+plot(daily_avg_ma_pm25,main = "Graph 1: Average PM25 levels at station 55, 2020",cex.main=0.9, xlab = "Time", ylab= "Average PM25 level per day")
 
 ```
 
@@ -108,7 +108,7 @@ Moving average dramatically increases in the beginning of August from around 17 
 tempts <- zoo(st55datset$temp, st55datset$datetime)
 daily_avg_t <- aggregate(tempts, as.Date(index(tempts)), mean)
 daily_avg_ma_t <- rollmean(daily_avg_t, k = 24, fill = NA)
-plot(daily_avg_ma_t, main = "Graph 2: Average Daily Temperature (C°) at station 55, 2020", xlab = "Time", ylab= "Average Daily Temperature (C°)")
+plot(daily_avg_ma_t, main = "Graph 2: Average Daily Temperature (C°) at station 55, 2020",cex.main=0.9, xlab = "Time", ylab= "Average Daily Temperature (C°)")
 ```
 
 The temperature has been increasing from June's values of 24 degrees Celsius to its peak in August at around 28.
@@ -119,7 +119,7 @@ The temperature has been increasing from June's values of 24 degrees Celsius to 
 windts <- zoo(st55datset$wind, st55datset$datetime)
 daily_avg_w <- aggregate(windts, as.Date(index(windts)), mean)
 daily_avg_ma_w <- rollmean(daily_avg_w, k = 24, fill = NA)
-plot(daily_avg_ma_w, main = "Graph 3: Average Wind Speed (knots/second) at station 55, 2020", xlab = "Time", ylab= "Average Wind Speed (knots/second)")
+plot(daily_avg_ma_w, main = "Graph 3: Average Wind Speed (knots/second) at station 55, 2020", cex.main=0.9, xlab = "Time", ylab= "Average Wind Speed (knots/second)")
 ```
 
 Average wind level has been stable at around 14m/s in the summer and started to decrease in the second part of August to around 12 in mid-September.
@@ -147,7 +147,7 @@ p <- ggplot(data=st55datset, aes(x=Time, y=pm25)) +
   ggtitle("Graph 5: PM2.5 levels at Station #55") +
   geom_rect(aes(xmin=xmin, xmax=xmax, ymin=25, ymax=ymax), fill=adjustcolor("pink",alpha.f=0.9), alpha=.2) +
   geom_line() +
-  annotate(geom="text", x=as.POSIXct("2020-06-18"), y=200, label="Dangerous PM2.5 level", color="darkred") +
+  annotate(geom="text", x=as.POSIXct("2020-06-18"), y=200, label="Dangerous PM2.5 level", color="darkred", cex=3.5) +
   geom_hline(yintercept=25, color="darkred") + 
   scale_y_continuous(expand=c(0,0)) +
 #  scale_x_date(limit=c(as.POSIXct("2020-06-01 00:00:00"),as.POSIXct("2020-09-30 23:00:00")))+
@@ -155,10 +155,11 @@ p <- ggplot(data=st55datset, aes(x=Time, y=pm25)) +
 p
 ```
 
-Majority of measurements from June to mid-August are smaller than the prescribed limit with the exception of a peak of an outlying 307.81 in July. However, since then until October, the dynamic has changed with only a few days where the values staying within the limit constraints below 25. The peaks are high, probably resulted from fires, high temperatures and strong wind.
+Measurements from June to mid-August are smaller than the prescribed limit with the exception of a peak of an outlying 307.81 in July. 
+However, since August until October, the dynamic has changed with only a few days where the values stayed within the limit constraints below 25 and most data being above the safe limit. The peaks are high, probably resulted from fires, high temperatures and strong wind.
 
 ```{r wind levels}
-#Graph of wind strenght 
+#Graph of wind strength
 
  windy <- ggplot(data=st55datset, aes(x=Time, y=wind)) +
    ggtitle("Graph 6: Wind strength") +
@@ -198,7 +199,7 @@ p_0(3) = \frac{1}{3}
 \end{pmatrix}
 \]
 ```{r model}
-#Computing intial probabilities and transtion matrix 
+#Computing initial probabilities and transition matrix 
 
 set.seed(2)
 y=as.numeric(st55datset$pm25)
@@ -250,7 +251,7 @@ The following table gives the expected number of hours for pollution state to mo
 #Expected number of hours to move from one state to other
 
 tpm <- getpars(fmodel)[4:12]
-mcpm25 <- new("markovchain", states = c("low","medium","high"), transitionMatrix = matrix(data=tpm, byrow=TRUE, nrow=3), name="PM25")
+mcpm25 <- new("markovchain", states = c("Low","Medium","High"), transitionMatrix = matrix(data=tpm, byrow=TRUE, nrow=3), name="PM25")
 meanFirstPassageTime(mcpm25)
 ```
 
@@ -269,8 +270,7 @@ estStates <- posterior(fmodel)
 
 #State predictions graph
 
-plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "Predicted State", xlab="Time" ,  cex=.3, type="s", main="Graph 7: State predictions")
-
+plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "Predicted State", xlab="Time" ,  cex=.3, type="s", main="Graph 7: State predictions") 
 ```
 
 # Question 2 
@@ -314,7 +314,7 @@ log_ts41_avg <- rollmean(log_ts41_zoo, k = 12, fill = NA)
 ```{r, Graph 8}
 #Setting up graph 8
 
-plot(log_ts55_avg, col = "red", main = "Graph 8: pm25 levels at station 41 and 55", cex.main=0.9, xlab="Time" ,ylab= "Pm25 level (log of)")
+plot(log_ts55_avg, col = "red", main = "Graph 8: PM2.5 levels at station 41 and 55", cex.main=0.9, xlab="Time" ,ylab= "PM2.5 level (log of)")
 lines(log_ts41_avg, col = "black")
 legend("topleft", legend = c("Station 41","Station 55"), col = c("black","red"), lty = c(1,1), cex = 0.5)
 ```
@@ -324,7 +324,7 @@ legend("topleft", legend = c("Station 41","Station 55"), col = c("black","red"),
 
 #Setting up graph 9
 
-plot(log_ts92_avg, col = "red", main = "Graph 9: pm25 levels at station 92 and 97", cex.main=0.9, xlab="Time" ,ylab= "Pm25 level (log of)")
+plot(log_ts92_avg, col = "red", main = "Graph 9: PM2.5 levels at station 92 and 97", cex.main=0.9, xlab="Time" ,ylab= "PM2.5 level (log of)")
 lines(log_ts97_avg, col = "black")
 legend("topleft", legend = c("Station 97","Station 92"), col = c("black","red"), lty = c(1,1), cex = 0.5)
 ```
@@ -334,7 +334,7 @@ legend("topleft", legend = c("Station 97","Station 92"), col = c("black","red"),
 
 #Setting up graph 10
 
-plot(log_ts41_avg, col = "black", main = "Graph 10: pm25 levels at station 92 and 41", cex.main=0.9,xlab="Time" , ylab= "Pm25 level (log of)")
+plot(log_ts41_avg, col = "black", main = "Graph 10: PM2.5 levels at station 92 and 41", cex.main=0.9,xlab="Time" , ylab= "PM2.5 level (log of)")
 lines(log_ts92_avg, col = "red")
 legend("topleft", legend = c("Station 41","Station 92"), col = c("black","red"), lty = c(1,1), cex = 0.5)
 ```
@@ -406,7 +406,6 @@ build <- function(parm){
   mod$C0 <- diag(m*p)*1e-5
   return(mod)
 }
-
 #MLE
 k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
 fit <- dlmMLE(df,rep(0.2,k),build,lower = rep(1e-6,k))
@@ -415,13 +414,21 @@ fit$value #MLE negative loglikelihood value
 fit$par
 unlist(build(fit$par)[c("V", "W")])
 
-#Filtering
-?dlmFilter
+#Building a model
 mod_dlm <- build(fit$par)
+mod_dlm$V
+
+#Filtering
 outFilt <- dlmFilter(df, mod_dlm)
-outFilt$m[length(df)+1,]
-par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.8)
-plot(dropFirst(outFilt$m),ylab = "Filtered Estimates", main = "Graph 11: Filtered Estimates")
+fc <- dlmForecast(outFilt,nAhead=1)
+fc
+forecast_y <- round(fc$f,3)
+
+# Creating response parameter table
+table_matrix <- matrix(nrow = 1, ncol = 4)
+table_matrix[1, 1:4] <- forecast_y
+table_data <- data.frame(table_matrix)
+knitr::kable(table_data, col.names = c("Station41","Station55","Station92","Station97"))
 ```
 
 
