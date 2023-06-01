@@ -301,39 +301,21 @@ In case of spatial dependence we expect the graphs of the closer stations to be 
 
 # Model specification
 
-```{r}
-#Combine datasets
-df <- merge.zoo(log_ts41_avg,log_ts55_avg,log_ts92_zoo,log_ts97_avg)
+To set up a model that accounts for the spatial dependency we first need a formula to calculate the distance between stations. We decided to use the geometrical based on the coordinates of the stations.
 
-#Location of stations
-s41 <- c(37.79339,-121.2479)
-s55 <- c(37.28185,-120.4337)
-s92 <- c(33.71969,-116.1897)
-s97 <- c(36.16976,-115.263)
 
-#Number of stations
-m=4
-#Number of states
-p=3
 
-#Function for calculating distance
-distance <- function(s1,s2){
-  sqrt(sum(s1 - s2)^2)
-}
+$
 
-#Model specification
-build <- function(parm,s1,s2){
-  dlmModPoly(order = p,
-             dV = diag(parm[1:p]),
-             dW = parm[p+1] * exp(-parm[p+2]*distance(s1,s2))
-  )
-}
+distance_{i,j} = \sqrt{{(long_{i}-long_{j} )^2 + (lat_{i}-lat_{j})^2}}
 
-#MLE
-k <- p+2 #Number of parameters
-fit <- dlmMLE(df,rep(0.2,k),build, lower = rep(1e-6,k),s1 = s41, s2 = s52)
+$
 
-```
+
+
+
+
+
 
 
 
