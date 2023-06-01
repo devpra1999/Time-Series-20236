@@ -213,7 +213,24 @@ The results of the estimation of both the initial probabilities and the transiti
 #Estimation of initial probabilities and transition matrix 
 
 fmodel <- fit(model)
-summary(fmodel)
+MLEse <- standardError(fmodel)
+coefficients <- round(MLEse$par[13:18], 3)
+standard_errors <- round(MLEse$se[13:18], 3)
+labels <- c("St1 Intercept", "State 1 Standard Deviation", "St2 Intercept", "State 2 Standard Deviation", "St3 Intercept", "State 3 Standard Deviation")
+
+#creating confidence interval 
+upper_bound= coefficients + 1.984*standard_errors
+lower_bound= coefficients - 1.984*standard_errors
+
+
+# Creating response parameter table
+table_matrix <- matrix(nrow = 6, ncol = 4)
+table_matrix[1:6, 1] <- coefficients
+table_matrix[1:6, 2] <- standard_errors
+table_matrix[1:6,3] = upper_bound
+table_matrix[1:6,4] = lower_bound
+table_data <- data.frame(Label = labels, table_matrix)
+knitr::kable(table_data, col.names = c("Label", "Coefficient", "Standard Error","Upper Bound","Lower Bound"))
 ```
 
 
@@ -349,18 +366,31 @@ m=4
 p=2
 
 #Function for calculating distance
-distance <- function(s1,s2){
-  sqrt(sum(s1 - s2)^2)
+distance <- function(s1, s2) {
+  lat_diff <- s1[1] - s2[1]
+  lon_diff <- s1[2] - s2[2]
+  sqrt(lat_diff^2 + lon_diff^2)
 }
 
 #Make matrix of distances
 D = matrix(nrow = m,ncol = m)
 for (i in 1:m){
   for (j in 1:m){
-    D[i,j] <- distance(s1 = list_st[[i]], s2 = list_st[[j]])
+    D[i,j] <- distance(list_st[[i]],list_st[[j]])
   }
 }
 
+```
+$$
+\begin{cases}
+\begin{aligned}
+Y_t &= F \theta_t + v_t \quad & v_t  \overset{indep}\sim N_m(\textbf{0}, V) \\
+\theta_t &= G \theta_t + w_t, \quad & w_t \overset{indep}\sim N_p(\textbf{0}, W) 
+\end{aligned}
+\end{cases}
+$$
+```
+```{r}
 #Model specification
 build <- function(parm){
   #p=2,m=4
