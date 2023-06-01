@@ -385,10 +385,13 @@ fit$value #MLE negative loglikelihood value
 fit$par
 unlist(build(fit$par)[c("V", "W")])
 
-
 #Filtering
 ?dlmFilter
-
+mod_dlm <- build(fit$par)
+outFilt <- dlmFilter(df, mod_dlm)
+outFilt$m[length(df)+1,]
+par(mar = c(2, 4, 1, 1) + 0.1, cex = 0.8)
+plot(dropFirst(outFilt$m),ylab = "Filtered Estimates", main = "Graph 11: Filtered Estimates")
 ```
 
 
