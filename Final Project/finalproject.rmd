@@ -366,15 +366,17 @@ m=4
 p=2
 
 #Function for calculating distance
-distance <- function(s1,s2){
-  sqrt(sum(s1 - s2)^2)
+distance <- function(s1, s2) {
+  lat_diff <- s1[1] - s2[1]
+  lon_diff <- s1[2] - s2[2]
+  sqrt(lat_diff^2 + lon_diff^2)
 }
 
 #Make matrix of distances
 D = matrix(nrow = m,ncol = m)
 for (i in 1:m){
   for (j in 1:m){
-    D[i,j] <- distance(s1 = list_st[[i]], s2 = list_st[[j]])
+    D[i,j] <- distance(list_st[[i]],list_st[[j]])
   }
 }
 ```
