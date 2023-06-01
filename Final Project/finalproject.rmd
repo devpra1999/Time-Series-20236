@@ -306,6 +306,7 @@ To set up a model that accounts for the spatial dependency we first need a formu
 $$
 distance_{i,j} = \sqrt{{(long_{i}-long_{j} )^2 + (lat_{i}-lat_{j})^2}}
 $$
+
 ```{r}
 #Combine datasets
 df <- as.ts(merge.zoo(log_ts41_avg,log_ts55_avg,log_ts92_zoo,log_ts97_avg))
