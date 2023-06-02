@@ -493,7 +493,7 @@ build <- function(parm){
 #MLE
 k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
 
-# fit <- dlmMLE(df,rep(0.2,k),build,lower = rep(1e-6,k), hessian = TRUE)
+fit <- dlmMLE(df,rep(0.2,k),build,lower = rep(1e-6,k), hessian = TRUE)
 # fit$convergence
 # fit$value #MLE negative loglikelihood value
 # fit$par
@@ -508,12 +508,12 @@ k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
 ```{r forecasting, echo=FALSE, warning=FALSE}
 #Building a model
 
-#mod_dlm <- build(fit$par)
+mod_dlm <- build(fit$par)
 #mod_dlm$V
 
 #Filtering
-#outFilt <- dlmFilter(df, mod_dlm)
-#fc <- dlmForecast(outFilt,nAhead=1)
+outFilt <- dlmFilter(df, mod_dlm)
+fc <- dlmForecast(outFilt,nAhead=1)
 #fc
 #forecast_theta2 <- round(fc$a[1:4],3)
 #forecast_theta1 <- round(fc$a[5:8],3)
