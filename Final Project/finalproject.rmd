@@ -540,5 +540,5 @@ k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
 
 ```
 
-Clearly, the values for State 2 Expected Value and one-step-ahead prediction are the same, as it seems that for all stations, the value of PM2.5 is expected to be high, hence being in state 2. 
+Clearly, the values for State 2 Expected Value and one-step-ahead prediction are the same. So, as it seems that for all stations, the value of PM2.5 is expected to be high, hence being in state 2.
 
