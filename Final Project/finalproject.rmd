@@ -530,15 +530,10 @@ k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
 ```
 
 ```{r Comparison Plots}
-#n <- length(outFilt$f[,1])
-#plot(x = as.Date(attr(outFilt$f,"index")[6:n]),
-#     y = outFilt$f[6:n,1],
-#     xlab = "Date", ylab = "PM2.5 level (log of)",
-#     main = "Figure 11: Station 41 - Observed and Model Forecasts",
-#     type = "l"
-#)
-#lines()
-
+n <- length(outFilt$f[,1])
+plot(time(log_ts41_avg)[6:n], outFilt$f[6:n,1], col = "red",type = "l",xlab = "Date", ylab = "PM2.5 level (log of)",main = "Figure 11: Station 41 - Obeserved and Model Forecasts")
+lines(time(log_ts41_avg)[6:n], log_ts41_avg[6:n], col = "black")
+legend("topleft", legend = c("Observed","Forecast"), col = c("black","red"), lty = c(1,1))
 
 ```
 
