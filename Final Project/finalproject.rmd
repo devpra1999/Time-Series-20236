@@ -471,6 +471,8 @@ Y_t &= F \theta_t + v_t \quad & v_t  \overset{indep}\sim N_m(\textbf{0}, V) \\
 \end{cases}
 $$
 where $\theta_0 \overset{}\sim N(m_0, C_0)$ and $\theta_0, (v_t), (w_t)$ are mutually independent.
+
+In this part of the project, we decided to work with 2 states, as to make it less computationally intensive rather than using 3 states like in question 1. 
 ```{r Model specification, echo=FALSE, warning=FALSE}
 build <- function(parm){
   #p=2,m=4
@@ -489,11 +491,11 @@ build <- function(parm){
 #MLE
 k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
 
-#fit <- dlmMLE(df,rep(0.2,k),build,lower = rep(1e-6,k), hessian = TRUE)
-#fit$convergence
-#fit$value #MLE negative loglikelihood value
-#fit$par
-#unlist(build(fit$par)[c("V", "W")])
+# fit <- dlmMLE(df,rep(0.2,k),build,lower = rep(1e-6,k), hessian = TRUE)
+# fit$convergence
+# fit$value #MLE negative loglikelihood value
+# fit$par
+# unlist(build(fit$par)[c("V", "W")])
 
 #avar <- solve(fit$hessian)
 #avar <- diag(exp(fit$par)) %*% avarLog %*% diag(exp(fit$par))
@@ -530,7 +532,7 @@ k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
 #plot(x = as.Date(attr(outFilt$f,"index")[6:n]),
 #     y = outFilt$f[6:n,1],
 #     xlab = "Date", ylab = "PM2.5 level (log of)",
-#     main = "Graph 11: Station 41 - Obeserved and Model Forecasts",
+#     main = "Graph 11: Station 41 - Observed and Model Forecasts",
 #     type = "l"
 #)
 #lines()
@@ -538,5 +540,5 @@ k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
 
 ```
 
-Clearly, the values for State 2 Expected Value and one-step-ahead prediction are the same, as it seems that for all stations, the value of PM2.5 is expected to be high. 
+Clearly, the values for State 2 Expected Value and one-step-ahead prediction are the same, as it seems that for all stations, the value of PM2.5 is expected to be high, hence being in state 2. 
 
