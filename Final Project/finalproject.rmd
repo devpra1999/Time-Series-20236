@@ -337,7 +337,7 @@ estStates <- posterior(fmodel)
 
 #State predictions graph
 
-plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "Predicted State", xlab="Time" ,  cex=.3, type="s", main="Graph 7: State predictions") 
+plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "Predicted State", xlab="Time" ,  cex=.3, type="s", main="Graph 7: State predictions", cex.main=0.9) 
 ```
 
 # Question 2 
@@ -452,10 +452,11 @@ $$
 \begin{cases}
 \begin{aligned}
 Y_t &= F \theta_t + v_t \quad & v_t  \overset{indep}\sim N_m(\textbf{0}, V) \\
-\theta_t &= G \theta_t + w_t, \quad & w_t \overset{indep}\sim N_p(\textbf{0}, W) 
+\theta_t &= G \theta_{t-1} + w_t, \quad & w_t \overset{indep}\sim N_p(\textbf{0}, W) 
 \end{aligned}
 \end{cases}
 $$
+where $\theta_0 \overset{}\sim N(m_0, C_0)$ and $\theta_0, (v_t), (w_t)$ are mutually independent.
 ```{r}
 #Model specification
 build <- function(parm){
@@ -474,20 +475,15 @@ build <- function(parm){
 }
 #MLE
 k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
-fit <- dlmMLE(df,rep(0.2,k),build,lower = rep(1e-6,k))
-fit$convergence
-fit$value #MLE negative loglikelihood value
-fit$par
+fit <- dlmMLE(df,rep(0.2,k),build,lower = rep(1e-6,0))
 unlist(build(fit$par)[c("V", "W")])
 
 #Building a model
 mod_dlm <- build(fit$par)
-mod_dlm$V
 
 #Filtering
 outFilt <- dlmFilter(df, mod_dlm)
 fc <- dlmForecast(outFilt,nAhead=1)
-fc
 forecast_theta2 <- round(fc$a[1:4],3)
 forecast_theta1 <- round(fc$a[5:8],3)
 forecast_y <- round(fc$f,3)
@@ -499,7 +495,7 @@ table_matrix[3, 1:4] <- forecast_y
 table_matrix[1, 1:4] <- forecast_theta1
 table_matrix[2, 1:4] <- forecast_theta2
 table_data <- data.frame(label=labels, table_matrix)
-knitr::kable(table_data, col.names = c("Label","Station41","Station55","Station92","Station97"))
+knitr::kable(table_data, col.names = c("Label","Station 41","Station 55","Station 92","Station 97"))
 ```
 
 Clearly, the values for State 2 Expected Value and one-step-ahead prediction are the same, as it seems that for all stations, the value of PM2.5 is expected to be high. 
