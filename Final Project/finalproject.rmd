@@ -128,13 +128,13 @@ from Figure 3 we can see that average wind level has been stable at around 14m/s
 ```{r compare}
 #Creating graph for pm25, wind adùnd temperature at station 55
 
-plot(scale(daily_avg_ma_pm25), col = "darkgreen", main = "Graph 4: Scaled development of PM25, temperature and wind, 2020", cex.main=0.9,xlab = "Time", ylab= "Scaled index")
+plot(scale(daily_avg_ma_pm25), col = "darkgreen", main = "Figure 4: Scaled development of PM25, temperature and wind, 2020", cex.main=0.9,xlab = "Time", ylab= "Scaled index")
 lines(scale(daily_avg_ma_w), col = "blue")
 lines(scale(daily_avg_ma_t), col = "red")
 legend("bottomleft", legend = c("PM25","Wind", "Temp"), col = c("darkgreen","blue","red"), lty = c(1,1,1), cex = 0.5)
 ```
 
-High average temperature in August and comparatively strong winds seem to have a correlation with fires, which have increased the values of PM25 particles in the air. There is around 10 day lag between the temperature increases and PM25 value increase in August.
+As we can see from Figure 4: high average temperature in August and comparatively strong winds seem to have a correlation with fires, which have increased the values of PM25 particles in the air. There is around 10 day lag between the temperature increases and PM25 value increase in August.
 
 ```{r PM25 levels}
 
@@ -145,7 +145,7 @@ xmax = max(st55datset$Time)
 ymax = max(st55datset$pm25)
 
 p <- ggplot(data=st55datset, aes(x=Time, y=pm25)) +
-  ggtitle("Graph 5: PM2.5 levels at Station #55") +
+  ggtitle("Figure 5: PM2.5 levels at Station #55") +
   geom_rect(aes(xmin=xmin, xmax=xmax, ymin=25, ymax=ymax), fill=adjustcolor("pink",alpha.f=0.9), alpha=.2) +
   geom_line() +
   annotate(geom="text", x=as.POSIXct("2020-06-18"), y=200, label="Dangerous PM2.5 level", color="darkred", cex=3.5) +
