@@ -309,7 +309,7 @@ knitr::kable(table_data, col.names = colnames(table_data), caption = title)
 
 Firstly, we can identify the three states that we wanted to study. State 1 is the one relative to low pollution, state 3 is relative to high pollution levels and state 2 is the one that we can associate to a medium pollution levels. Looking at the transition matrix we note that there are steps that are never possible, state 3 to 1 and vice versa.
 
-Further, the states are very persistent, and probability of state transition by a single step is very low, and by two steps virtually zero. Thus, the current state is a very good predictor of the state in the next hour.
+Further, the states are very persistent, and probability of state transition by a single step is very low, and by two steps virtually zero. This can be seen by looking at Table 1. Thus, the current state is a very good predictor of the state in the next hour.
 
 If the current state is of low pollution, there is not much need to enforce any strict measures, with an extremely high probability (0.993) of staying the same low pollution state.
 
@@ -317,7 +317,9 @@ If the current state is of medium pollution, there is a need to enforce strict m
 
 Finally, if the pollution is high prolonged strict measures should be anticipated to bring it down medium pollution and finally to low pollution (prolonged because) both high and medium pollution states being highly persistent.
 
-The following table gives the expected number of hours for pollution state to move from i to j (where i and j are different).
+Table 2 shows us the estimations of the mean and the standard deviation of the distribution of the states. 
+
+Table 3 gives the expected number of hours for pollution state to move from i to j (where i and j are different).
 
 ```{r future hours, echo=FALSE}
 #Expected number of hours to move from one state to other
