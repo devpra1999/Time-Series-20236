@@ -157,13 +157,13 @@ p
 ```
 
 Measurements from June to mid-August are smaller than the prescribed limit with the exception of a peak of an outlying 307.81 in July. 
-However, since August until October, the dynamic has changed with only a few days where the values stayed within the limit constraints below 25 and most data being above the safe limit. The peaks are high, probably resulted from fires, high temperatures and strong wind.
+However, since August until October, the dynamic has changed with only a few days where the values stayed within the limit constraints below 25 and most data being above the safe limit (see Figure 5). The peaks are high, probably resulted from fires, high temperatures and strong wind.
 
 ```{r wind levels}
 #Graph of wind strength
 
  windy <- ggplot(data=st55datset, aes(x=Time, y=wind)) +
-   ggtitle("Graph 6: Wind strength") +
+   ggtitle("Figure 6: Wind strength") +
    geom_line() + 
    scale_y_continuous(expand=c(0,0)) +
 #   scale_x_date(limit=c(as.Date("2020-06-01"),as.Date("2020-09-30")))+
