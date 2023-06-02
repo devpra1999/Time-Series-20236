@@ -207,35 +207,100 @@ set.seed(2)
 y=as.numeric(st55datset$pm25)
 model = depmix(y~ 1, data=data.frame(y), nstates=3)
 cat('\n') 
-model
 ```
-
 The results of the estimation of both the initial probabilities and the transition matrix are indicated below.
 
-```{r MLE, echo=FALSE}
-#Estimation of initial probabilities and transition matrix 
+```{r tables for initial probabilities }
+#setting up table fo initial probabilities
+table_matrix_2=matrix(c(0.333,0.333,0.333), nrow=1, ncol=3, byrow=T)
+matrix_df <- as.data.frame(table_matrix_2)
+row_labels_2 <- c("Prob. 1", "Prob. 2", "Prob. 3")
+colnames(matrix_df) <- row_labels_2
+table_title <- "Initial State probabilities"
+knitr::kable(matrix_df, row.names = FALSE,caption=table_title)
+```
+```{r,initial transition probabilities }
+#setting up table for initial transition probabilities
+table_matrix_2=matrix(c(0.333,0.333,0.333,0.333,0.333,0.333,0.333,0.333,0.333), nrow=3, ncol=3, byrow=T)
+column1 = c("From state 1","From state 2","From state 3")
+matrix_df <- as.data.frame(table_matrix_2)
+row_labels <- c("To state 1", "To state 2", "To state 3")
+colnames(matrix_df) <- row_labels
+Transition <- c("From state 1", "From state 2", "From state 3")
+matrix_df <- cbind(Transition, matrix_df)
+table_title <- "Initial transition transition probabilities of the states"
+knitr::kable(matrix_df, row.names = FALSE,caption=table_title)
 
+```
+
+```{r,initial response parameters tables }
+table_matrix_2=matrix(c("State 1",0,1,"State 2",0,1,"State 3",0,1), nrow=3, ncol=3, byrow=T)
+matrix_df <- as.data.frame(table_matrix_2)
+row_labels_2 <- c("", "Intercept", "Standard deviation")
+colnames(matrix_df) <- row_labels_2
+table_title <- "Initial mean and standard deviation of the states"
+knitr::kable(matrix_df, row.names = FALSE,caption=table_title)
+```
+
+```{r,echo=FALSE, message=FALSE, results='hide'}
+#fitting model 
 fmodel <- fit(model)
+```
+```{r,echo=FALSE}
+# Creating Initial state probabilities tables
+MLEse <- standardError(fmodel)
+coefficients2 = round(MLEse$par[1:3],3)
+table_matrix_2=matrix(coefficients2, nrow=1, ncol=3, byrow=T)
+matrix_df <- as.data.frame(table_matrix_2)
+row_labels_2 <- c("Prob. 1", "Prob. 2", "Prob. 3")
+colnames(matrix_df) <- row_labels_2
+table_title <- "Initial State probabilities"
+knitr::kable(matrix_df, row.names = FALSE,caption=table_title)
+
+```
+
+```{r,echo=FALSE}
+
+# Creating a transition matrix  table
+MLEse <- standardError(fmodel)
+coefficients1 = round(MLEse$par[4:12],3)
+table_matrix_2=matrix(coefficients1, nrow=3, ncol=3, byrow=T)
+column1 = c("From state 1","From state 2","From state 3")
+matrix_df <- as.data.frame(table_matrix_2)
+row_labels <- c("To state 1", "To state 2", "To state 3")
+colnames(matrix_df) <- row_labels
+Transition <- c("From state 1", "From state 2", "From state 3")
+matrix_df <- cbind(Transition, matrix_df)
+table_title <- "Estimated transition probabilities of the states^[The probabilities were estimated through MLE]  "
+knitr::kable(matrix_df, row.names = FALSE,caption=table_title)
+```
+
+```{r,echo=FALSE}  
+#creating response parameter coefficients
+
 MLEse <- standardError(fmodel)
 coefficients <- round(MLEse$par[13:18], 3)
 standard_errors <- round(MLEse$se[13:18], 3)
-labels <- c("St1 Intercept", "State 1 Standard Deviation", "St2 Intercept", "State 2 Standard Deviation", "St3 Intercept", "State 3 Standard Deviation")
 
 #creating confidence interval 
 upper_bound= coefficients + 1.984*standard_errors
 lower_bound= coefficients - 1.984*standard_errors
 
-
 # Creating response parameter table
+
+labels <- c("St1 Intercept", "State 1 Standard Deviation", "St2 Intercept", "State 2 Standard Deviation", "St3 Intercept", "State 3 Standard Deviation")
 table_matrix <- matrix(nrow = 6, ncol = 4)
+
 table_matrix[1:6, 1] <- coefficients
 table_matrix[1:6, 2] <- standard_errors
 table_matrix[1:6,3] = upper_bound
 table_matrix[1:6,4] = lower_bound
 table_data <- data.frame(Label = labels, table_matrix)
-knitr::kable(table_data, col.names = c("Label", "Coefficient", "Standard Error","Upper Bound","Lower Bound"))
-```
+title <- "MLE estimates of the mean and standard deviation of the states^[Upper and lower bound computed at the 95% confidence level]"
+colnames(table_data) <- c("", "Coefficient", "Standard Error", "Upper Bound", "Lower Bound")
+knitr::kable(table_data, col.names = colnames(table_data), caption = title)
 
+```
 
 Firstly, we can identify the three states that we wanted to study. State 1 is the one relative to low pollution, state 3 is relative to high pollution levels and state 2 is the one that we can associate to a medium pollution levels. Looking at the transition matrix we note that there are steps that are never possible, state 3 to 1 and vice versa.
 
