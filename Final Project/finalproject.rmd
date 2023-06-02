@@ -172,6 +172,8 @@ However, since August until October, the dynamic has changed with only a few day
 ```
 
 # Gaussian HMM Model
+We will model the PM2.5 levels in the air using a 3-state Gaussian Hidden Markov model with a simple random walk. The following equations describe it -
+
 \begin{equation*}
 \begin{cases}
 Y_t = \mu_1 + \epsilon_t, \quad \epsilon_t \overset{iid}{\sim} N(0, \sigma_1^2)  
@@ -184,32 +186,33 @@ Y_t = \mu_3 + \epsilon_t, \quad \epsilon_t \overset{iid}{\sim} N(0, \sigma_3^2)
 
 \end{cases}
 \end{equation*}
-First, we set up our model. The initial probabilities and the transition matrix are just made by default values. Since, there are 3 states, they will have 1/3 probability each.
-\[
-\begin{tabular}{c|ccc}
-State & 1 & 2 & 3 \\
-\hline
-Probability & $\pi_1$ & $\pi_2$ & $\pi_3$
-\end{tabular}
-\begin{equation*}
-\begin{pmatrix}
-p_0(1) = \frac{1}{3}\\
+The initial states and the transitions from state i to j are considered to have equal. Since, there are 3 states, they will have 1/3 probability each. Similarly, the transition probabilities from any state i to j are also initially set to 1/3.
 
-p_0(2) = \frac{1}{3} \\
-
-p_0(3) = \frac{1}{3}
-\end{pmatrix}
-\end{equation*}
-\]
 ```{r model}
 #Computing initial probabilities and transition matrix 
 
 set.seed(2)
 y=as.numeric(st55datset$pm25)
 model = depmix(y~ 1, data=data.frame(y), nstates=3)
-cat('\n') 
+cat('\n')
+
+#\[
+#\begin{tabular}{c|ccc}
+#State & 1 & 2 & 3 \\
+#\hline
+#Probability & $\pi_1$ & $\pi_2$ & $\pi_3$
+#\end{tabular}
+#\begin{equation*}
+#\begin{pmatrix}
+#p_0(1) = \frac{1}{3}\\
+
+#p_0(2) = \frac{1}{3} \\
+
+#p_0(3) = \frac{1}{3}
+#\end{pmatrix}
+#\end{equation*}
+#\]
 ```
-The results of the estimation of both the initial probabilities and the transition matrix are indicated below.
 
 ```{r tables for initial probabilities }
 #setting up table fo initial probabilities
@@ -218,7 +221,7 @@ matrix_df <- as.data.frame(table_matrix_2)
 row_labels_2 <- c("Prob. 1", "Prob. 2", "Prob. 3")
 colnames(matrix_df) <- row_labels_2
 table_title <- "Initial State probabilities"
-knitr::kable(matrix_df, row.names = FALSE,caption=table_title)
+#knitr::kable(matrix_df, row.names = FALSE,caption=table_title)
 ```
 ```{r,initial transition probabilities }
 #setting up table for initial transition probabilities
@@ -230,7 +233,7 @@ colnames(matrix_df) <- row_labels
 Transition <- c("From state 1", "From state 2", "From state 3")
 matrix_df <- cbind(Transition, matrix_df)
 table_title <- "Initial transition transition probabilities of the states"
-knitr::kable(matrix_df, row.names = FALSE,caption=table_title)
+#knitr::kable(matrix_df, row.names = FALSE,caption=table_title)
 
 ```
 
@@ -240,7 +243,7 @@ matrix_df <- as.data.frame(table_matrix_2)
 row_labels_2 <- c("", "Intercept", "Standard deviation")
 colnames(matrix_df) <- row_labels_2
 table_title <- "Initial mean and standard deviation of the states"
-knitr::kable(matrix_df, row.names = FALSE,caption=table_title)
+#knitr::kable(matrix_df, row.names = FALSE,caption=table_title)
 ```
 
 ```{r,echo=FALSE, message=FALSE, results='hide'}
@@ -256,10 +259,11 @@ matrix_df <- as.data.frame(table_matrix_2)
 row_labels_2 <- c("Prob. 1", "Prob. 2", "Prob. 3")
 colnames(matrix_df) <- row_labels_2
 table_title <- "Initial State probabilities"
-knitr::kable(matrix_df, row.names = FALSE,caption=table_title)
+#knitr::kable(matrix_df, row.names = FALSE,caption=table_title)
 
 ```
 
+Running the HMM model outlined above on the PM2.5 data gives us the following transition probabilities from state i to state j -
 ```{r,echo=FALSE}
 
 # Creating a transition matrix  table
@@ -315,12 +319,21 @@ Finally, if the pollution is high prolonged strict measures should be anticipate
 
 The following table gives the expected number of hours for pollution state to move from i to j (where i and j are different).
 
-```{r future hours}
+```{r future hours, echo=FALSE}
 #Expected number of hours to move from one state to other
 
 tpm <- getpars(fmodel)[4:12]
 mcpm25 <- new("markovchain", states = c("Low","Medium","High"), transitionMatrix = matrix(data=tpm, byrow=TRUE, nrow=3), name="PM25")
-meanFirstPassageTime(mcpm25)
+exp_times <- round(meanFirstPassageTime(mcpm25),2)
+table_matrix_2=matrix(exp_times, nrow=3, ncol=3, byrow=T)
+column1 = c("From state 1","From state 2","From state 3")
+matrix_df <- as.data.frame(table_matrix_2)
+row_labels <- c("To state 1", "To state 2", "To state 3")
+colnames(matrix_df) <- row_labels
+Transition <- c("From state 1", "From state 2", "From state 3")
+matrix_df <- cbind(Transition, matrix_df)
+table_title <- "Expected number of hours for transition from state i to j"
+knitr::kable(matrix_df, row.names = FALSE,caption=table_title)
 ```
 
 Thus we can see that if the current state is of high pollution, it'll take an expected time of 92 hours for the pollution to reach the low pollution state and 23 hours to reach the medium pollution state. Again given the persistence of each state, the first passage time is a good metric for predicting outcomes over the next hours.
@@ -334,7 +347,7 @@ Finally, below is the prediction of the states, given the data observed.
 estStates <- posterior(fmodel)
 ```
 
-```{r, out.width='100%'}
+```{r, out.width='75%'}
 
 #State predictions graph
 
@@ -417,9 +430,9 @@ $$
 distance_{i,j} = \sqrt{{(long_{i}-long_{j} )^2 + (lat_{i}-lat_{j})^2}}
 $$
 
-```{r}
+```{r Set up spatio-temporal model, echo=FALSE, warning=FALSE}
 #Combine datasets
-df <- as.ts(merge.zoo(log_ts41_avg,log_ts55_avg,log_ts92_zoo,log_ts97_avg))
+df <- as.ts(merge.zoo(log_ts41_avg,log_ts55_avg,log_ts92_zoo,log_ts97_avg), frequency = 365*2)
 
 #Location of stations
 s41 <- c(37.79339,-121.2479)
@@ -458,8 +471,7 @@ Y_t &= F \theta_t + v_t \quad & v_t  \overset{indep}\sim N_m(\textbf{0}, V) \\
 \end{cases}
 $$
 where $\theta_0 \overset{}\sim N(m_0, C_0)$ and $\theta_0, (v_t), (w_t)$ are mutually independent.
-```{r}
-#Model specification
+```{r Model specification, echo=FALSE, warning=FALSE}
 build <- function(parm){
   #p=2,m=4
   mod <- dlmModPoly(order = p)
@@ -476,27 +488,54 @@ build <- function(parm){
 }
 #MLE
 k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
-fit <- dlmMLE(df,rep(0.2,k),build,lower = rep(1e-6,k))
-unlist(build(fit$par)[c("V", "W")])
 
+#fit <- dlmMLE(df,rep(0.2,k),build,lower = rep(1e-6,k), hessian = TRUE)
+#fit$convergence
+#fit$value #MLE negative loglikelihood value
+#fit$par
+#unlist(build(fit$par)[c("V", "W")])
+
+#avar <- solve(fit$hessian)
+#avar <- diag(exp(fit$par)) %*% avarLog %*% diag(exp(fit$par))
+#sd <- sqrt(diag(avar))
+```
+
+
+```{r forecasting, echo=FALSE, warning=FALSE}
 #Building a model
-mod_dlm <- build(fit$par)
+
+#mod_dlm <- build(fit$par)
+#mod_dlm$V
 
 #Filtering
-outFilt <- dlmFilter(df, mod_dlm)
-fc <- dlmForecast(outFilt,nAhead=1)
-forecast_theta2 <- round(fc$a[1:4],3)
-forecast_theta1 <- round(fc$a[5:8],3)
-forecast_y <- round(fc$f,3)
-labels <- c("State 1 Expected Value", "State 2 Expected Value", "1 Step Ahead Prediction")
+#outFilt <- dlmFilter(df, mod_dlm)
+#fc <- dlmForecast(outFilt,nAhead=1)
+#fc
+#forecast_theta2 <- round(fc$a[1:4],3)
+#forecast_theta1 <- round(fc$a[5:8],3)
+#forecast_y <- round(fc$f,3)
+#labels <- c("State 1 Expected Value", "State 2 Expected Value", "1 Step Ahead Prediction")
 
 # Creating response parameter table
-table_matrix <- matrix(nrow = 3, ncol = 4)
-table_matrix[3, 1:4] <- forecast_y
-table_matrix[1, 1:4] <- forecast_theta1
-table_matrix[2, 1:4] <- forecast_theta2
-table_data <- data.frame(label=labels, table_matrix)
-knitr::kable(table_data, col.names = c("Label","Station 41","Station 55","Station 92","Station 97"))
+#table_matrix <- matrix(nrow = 3, ncol = 4)
+#table_matrix[3, 1:4] <- forecast_y
+#table_matrix[1, 1:4] <- forecast_theta1
+#table_matrix[2, 1:4] <- forecast_theta2
+#table_data <- data.frame(label=labels, table_matrix)
+#knitr::kable(table_data, col.names = c("Label","Station 41","Station 55","Station 92","Station 97"))
+```
+
+```{r Comparison Plots}
+#n <- length(outFilt$f[,1])
+#plot(x = as.Date(attr(outFilt$f,"index")[6:n]),
+#     y = outFilt$f[6:n,1],
+#     xlab = "Date", ylab = "PM2.5 level (log of)",
+#     main = "Graph 11: Station 41 - Obeserved and Model Forecasts",
+#     type = "l"
+#)
+#lines()
+
+
 ```
 
 Clearly, the values for State 2 Expected Value and one-step-ahead prediction are the same, as it seems that for all stations, the value of PM2.5 is expected to be high. 
