@@ -353,7 +353,7 @@ estStates <- posterior(fmodel)
 
 #State predictions graph
 
-plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "Predicted State", xlab="Time" ,  cex=.3, type="s", main="Graph 7: State predictions", cex.main=0.9) 
+plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "Predicted State", xlab="Time" ,  cex=.3, type="s", main="Figure 7: State predictions", cex.main=0.9) 
 ```
 
 # Question 2 
@@ -397,7 +397,7 @@ log_ts41_avg <- rollmean(log_ts41_zoo, k = 12, fill = NA)
 ```{r, Graph 8}
 #Setting up graph 8
 
-plot(log_ts55_avg, col = "red", main = "Graph 8: PM2.5 levels at station 41 and 55", cex.main=0.9, xlab="Time" ,ylab= "PM2.5 level (log of)")
+plot(log_ts55_avg, col = "red", main = "Figure 8: PM2.5 levels at station 41 and 55", cex.main=0.9, xlab="Time" ,ylab= "PM2.5 level (log of)")
 lines(log_ts41_avg, col = "black")
 legend("topleft", legend = c("Station 41","Station 55"), col = c("black","red"), lty = c(1,1), cex = 0.5)
 ```
@@ -407,7 +407,7 @@ legend("topleft", legend = c("Station 41","Station 55"), col = c("black","red"),
 
 #Setting up graph 9
 
-plot(log_ts92_avg, col = "red", main = "Graph 9: PM2.5 levels at station 92 and 97", cex.main=0.9, xlab="Time" ,ylab= "PM2.5 level (log of)")
+plot(log_ts92_avg, col = "red", main = "Figure 9: PM2.5 levels at station 92 and 97", cex.main=0.9, xlab="Time" ,ylab= "PM2.5 level (log of)")
 lines(log_ts97_avg, col = "black")
 legend("topleft", legend = c("Station 97","Station 92"), col = c("black","red"), lty = c(1,1), cex = 0.5)
 ```
@@ -417,7 +417,7 @@ legend("topleft", legend = c("Station 97","Station 92"), col = c("black","red"),
 
 #Setting up graph 10
 
-plot(log_ts41_avg, col = "black", main = "Graph 10: PM2.5 levels at station 92 and 41", cex.main=0.9,xlab="Time" , ylab= "PM2.5 level (log of)")
+plot(log_ts41_avg, col = "black", main = "Figure 10: PM2.5 levels at station 92 and 41", cex.main=0.9,xlab="Time" , ylab= "PM2.5 level (log of)")
 lines(log_ts92_avg, col = "red")
 legend("topleft", legend = c("Station 41","Station 92"), col = c("black","red"), lty = c(1,1), cex = 0.5)
 ```
