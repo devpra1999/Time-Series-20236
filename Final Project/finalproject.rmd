@@ -108,7 +108,7 @@ Moving average dramatically increases in the beginning of August from around 17 
 tempts <- zoo(st55datset$temp, st55datset$datetime)
 daily_avg_t <- aggregate(tempts, as.Date(index(tempts)), mean)
 daily_avg_ma_t <- rollmean(daily_avg_t, k = 24, fill = NA)
-plot(daily_avg_ma_t, main = "Graph 2: Average Daily Temperature (C°) at station 55, 2020",cex.main=0.9, xlab = "Time", ylab= "Average Daily Temperature (C°)")
+ma_t_plot <- plot(daily_avg_ma_t, main = "Graph 2: Average Daily Temperature (C°) at station 55, 2020",cex.main=0.9, xlab = "Time", ylab= "Average Daily Temperature (C°)")
 ```
 
 The temperature has been increasing from June's values of 24 degrees Celsius to its peak in August at around 28.
@@ -119,7 +119,8 @@ The temperature has been increasing from June's values of 24 degrees Celsius to 
 windts <- zoo(st55datset$wind, st55datset$datetime)
 daily_avg_w <- aggregate(windts, as.Date(index(windts)), mean)
 daily_avg_ma_w <- rollmean(daily_avg_w, k = 24, fill = NA)
-plot(daily_avg_ma_w, main = "Graph 3: Average Wind Speed (knots/second) at station 55, 2020", cex.main=0.9, xlab = "Time", ylab= "Average Wind Speed (knots/second)")
+ma_w_plot <- plot(daily_avg_ma_w, main = "Graph 3: Average Wind Speed (knots/second) at station 55, 2020", cex.main=0.9, xlab = "Time", ylab= "Average Wind Speed (knots/second)")
+
 ```
 
 Average wind level has been stable at around 14m/s in the summer and started to decrease in the second part of August to around 12 in mid-September.
@@ -475,7 +476,7 @@ build <- function(parm){
 }
 #MLE
 k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
-fit <- dlmMLE(df,rep(0.2,k),build,lower = rep(1e-6,0))
+fit <- dlmMLE(df,rep(0.2,k),build,lower = rep(1e-6,k))
 unlist(build(fit$par)[c("V", "W")])
 
 #Building a model
