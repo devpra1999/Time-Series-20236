@@ -108,7 +108,7 @@ Moving average dramatically increases in the beginning of August from around 17 
 tempts <- zoo(st55datset$temp, st55datset$datetime)
 daily_avg_t <- aggregate(tempts, as.Date(index(tempts)), mean)
 daily_avg_ma_t <- rollmean(daily_avg_t, k = 24, fill = NA)
-plot(daily_avg_ma_t, main = "Graph 2: Average Daily Temperature (C°) at station 55, 2020",cex.main=0.9, xlab = "Time", ylab= "Average Daily Temperature (C°)")
+ma_t_plot <- plot(daily_avg_ma_t, main = "Graph 2: Average Daily Temperature (C°) at station 55, 2020",cex.main=0.9, xlab = "Time", ylab= "Average Daily Temperature (C°)")
 ```
 
 The temperature has been increasing from June's values of 24 degrees Celsius to its peak in August at around 28.
@@ -119,7 +119,8 @@ The temperature has been increasing from June's values of 24 degrees Celsius to 
 windts <- zoo(st55datset$wind, st55datset$datetime)
 daily_avg_w <- aggregate(windts, as.Date(index(windts)), mean)
 daily_avg_ma_w <- rollmean(daily_avg_w, k = 24, fill = NA)
-plot(daily_avg_ma_w, main = "Graph 3: Average Wind Speed (knots/second) at station 55, 2020", cex.main=0.9, xlab = "Time", ylab= "Average Wind Speed (knots/second)")
+ma_w_plot <- plot(daily_avg_ma_w, main = "Graph 3: Average Wind Speed (knots/second) at station 55, 2020", cex.main=0.9, xlab = "Time", ylab= "Average Wind Speed (knots/second)")
+
 ```
 
 Average wind level has been stable at around 14m/s in the summer and started to decrease in the second part of August to around 12 in mid-September.
@@ -350,7 +351,7 @@ estStates <- posterior(fmodel)
 
 #State predictions graph
 
-plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "Predicted State", xlab="Time" ,  cex=.3, type="s", main="Graph 7: State predictions") 
+plot(as.POSIXct(st55datset$datetime), estStates[,1],ylab= "Predicted State", xlab="Time" ,  cex=.3, type="s", main="Graph 7: State predictions", cex.main=0.9) 
 ```
 
 # Question 2 
@@ -465,10 +466,11 @@ $$
 \begin{cases}
 \begin{aligned}
 Y_t &= F \theta_t + v_t \quad & v_t  \overset{indep}\sim N_m(\textbf{0}, V) \\
-\theta_t &= G \theta_t + w_t, \quad & w_t \overset{indep}\sim N_p(\textbf{0}, W) 
+\theta_t &= G \theta_{t-1} + w_t, \quad & w_t \overset{indep}\sim N_p(\textbf{0}, W) 
 \end{aligned}
 \end{cases}
 $$
+where $\theta_0 \overset{}\sim N(m_0, C_0)$ and $\theta_0, (v_t), (w_t)$ are mutually independent.
 ```{r Model specification, echo=FALSE, warning=FALSE}
 build <- function(parm){
   #p=2,m=4
@@ -486,6 +488,7 @@ build <- function(parm){
 }
 #MLE
 k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
+
 #fit <- dlmMLE(df,rep(0.2,k),build,lower = rep(1e-6,k), hessian = TRUE)
 #fit$convergence
 #fit$value #MLE negative loglikelihood value
@@ -497,8 +500,10 @@ k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
 #sd <- sqrt(diag(avar))
 ```
 
+
 ```{r forecasting, echo=FALSE, warning=FALSE}
 #Building a model
+
 #mod_dlm <- build(fit$par)
 #mod_dlm$V
 
@@ -517,7 +522,7 @@ k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
 #table_matrix[1, 1:4] <- forecast_theta1
 #table_matrix[2, 1:4] <- forecast_theta2
 #table_data <- data.frame(label=labels, table_matrix)
-#knitr::kable(table_data, col.names = c("Label","Station41","Station55","Station92","Station97"))
+#knitr::kable(table_data, col.names = c("Label","Station 41","Station 55","Station 92","Station 97"))
 ```
 
 ```{r Comparison Plots}
@@ -529,7 +534,6 @@ k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
 #     type = "l"
 #)
 #lines()
-
 
 
 ```
