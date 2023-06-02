@@ -301,7 +301,7 @@ table_matrix[1:6, 2] <- standard_errors
 table_matrix[1:6,3] = upper_bound
 table_matrix[1:6,4] = lower_bound
 table_data <- data.frame(Label = labels, table_matrix)
-title <- "MLE estimates of the mean and standard deviation of the states^[Upper and lower bound computed at the 95% confidence level]"
+title <- "MLE estimates of the mean and standard deviation os pm25 for each states^[Upper and lower bound computed at the 95% confidence level]"
 colnames(table_data) <- c("", "Coefficient", "Standard Error", "Upper Bound", "Lower Bound")
 knitr::kable(table_data, col.names = colnames(table_data), caption = title)
 
@@ -317,9 +317,9 @@ If the current state is of medium pollution, there is a need to enforce strict m
 
 Finally, if the pollution is high prolonged strict measures should be anticipated to bring it down medium pollution and finally to low pollution (prolonged because) both high and medium pollution states being highly persistent.
 
-Table 2 shows us the estimations of the mean and the standard deviation of the distribution of the states. 
+Table 2 shows us the estimations of the mean and the standard deviation of the distribution of the observable variable (pm25) for each state. We can see that state 3 is assoiated with a higher mean level of pm25 compared to state 1 and 2. 
 
-Table 3 gives the expected number of hours for pollution state to move from i to j (where i and j are different).
+Table 3 gives the expected number of hours for pollution state to move from i to j (where i and j are different). We can see that once the level of pollution is high, it takes a long time (280.90 hours) to go back to the low pollution state. 
 
 ```{r future hours, echo=FALSE}
 #Expected number of hours to move from one state to other
