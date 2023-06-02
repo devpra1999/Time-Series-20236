@@ -494,14 +494,14 @@ build <- function(parm){
 k <- m + 2*p #Number of parameters - m for V and 2 for each state's W
 
 fit <- dlmMLE(df,rep(0.2,k),build,lower = rep(1e-6,k), hessian = TRUE)
-# fit$convergence
-# fit$value #MLE negative loglikelihood value
-# fit$par
-# unlist(build(fit$par)[c("V", "W")])
+ fit$convergence
+ fit$value #MLE negative loglikelihood value
+ fit$par
+ unlist(build(fit$par)[c("V", "W")])
 
-#avar <- solve(fit$hessian)
-#avar <- diag(exp(fit$par)) %*% avarLog %*% diag(exp(fit$par))
-#sd <- sqrt(diag(avar))
+avar <- solve(fit$hessian)
+avar <- diag(exp(fit$par)) %*% avarLog %*% diag(exp(fit$par))
+sd <- sqrt(diag(avar))
 ```
 
 
@@ -509,24 +509,24 @@ fit <- dlmMLE(df,rep(0.2,k),build,lower = rep(1e-6,k), hessian = TRUE)
 #Building a model
 
 mod_dlm <- build(fit$par)
-#mod_dlm$V
+mod_dlm$V
 
 #Filtering
 outFilt <- dlmFilter(df, mod_dlm)
 fc <- dlmForecast(outFilt,nAhead=1)
-#fc
-#forecast_theta2 <- round(fc$a[1:4],3)
-#forecast_theta1 <- round(fc$a[5:8],3)
-#forecast_y <- round(fc$f,3)
-#labels <- c("State 1 Expected Value", "State 2 Expected Value", "1 Step Ahead Prediction")
+fc
+forecast_theta2 <- round(fc$a[1:4],3)
+forecast_theta1 <- round(fc$a[5:8],3)
+forecast_y <- round(fc$f,3)
+labels <- c("State 1 Expected Value", "State 2 Expected Value", "1 Step Ahead Prediction")
 
 # Creating response parameter table
-#table_matrix <- matrix(nrow = 3, ncol = 4)
-#table_matrix[3, 1:4] <- forecast_y
-#table_matrix[1, 1:4] <- forecast_theta1
-#table_matrix[2, 1:4] <- forecast_theta2
-#table_data <- data.frame(label=labels, table_matrix)
-#knitr::kable(table_data, col.names = c("Label","Station 41","Station 55","Station 92","Station 97"))
+table_matrix <- matrix(nrow = 3, ncol = 4)
+table_matrix[3, 1:4] <- forecast_y
+table_matrix[1, 1:4] <- forecast_theta1
+table_matrix[2, 1:4] <- forecast_theta2
+table_data <- data.frame(label=labels, table_matrix)
+knitr::kable(table_data, col.names = c("Label","Station 41","Station 55","Station 92","Station 97"))
 ```
 
 ```{r Comparison Plots}
