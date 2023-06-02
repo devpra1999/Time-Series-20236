@@ -346,7 +346,7 @@ Finally, below is the prediction of the states, given the data observed.
 estStates <- posterior(fmodel)
 ```
 
-```{r, out.width='100%'}
+```{r, out.width='75%'}
 
 #State predictions graph
 
